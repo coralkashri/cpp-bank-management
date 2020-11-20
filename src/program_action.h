@@ -8,7 +8,7 @@
 
 class program_action {
 public:
-    program_action() = default;
+    program_action();
 
     void run();
 
@@ -19,11 +19,7 @@ private:
     std::map<std::string, std::function<void()>> available_actions;
 
     std::string get_available_actions();
-    void apply_action(std::string action);
-
-    void account_login_validation();
-    void account_logout_validation();
-
+    void apply_action(const std::string &action);
 };
 
 #endif //BANKMANAGEMENT_PROGRAM_ACTION_H
