@@ -11,7 +11,7 @@ public:
     bank();
 
     std::vector<std::string> get_accounts_names() const;
-    account get_account(std::string account_name);
+    account& get_account(std::string account_name);
     bool create_account(std::string name);
     void delete_account(std::string name);
 
