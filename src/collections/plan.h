@@ -7,6 +7,9 @@ class plan {
 public:
     plan(std::string plan_name);
 
+    bool operator==(const std::string &name);
+    bool operator!=(const std::string &name);
+
 private:
     std::string plan_name;
 };

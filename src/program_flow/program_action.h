@@ -4,22 +4,24 @@
 #include <map>
 #include <string>
 #include <functional>
-#include "bank.h"
+#include "../collections/bank.h"
+#include "available_user_actions.h"
 
 class program_action {
 public:
-    program_action();
+    program_action(std::string &&db_path);
 
     void run();
 
 private:
-    bank my_bank;
-    std::string current_account;
-    bool exit_flag = false;
-    std::map<std::string, std::function<void()>> available_actions;
+    bool is_running_flag = false;
+    available_user_actions user_actions;
+    std::map<std::string, void(available_user_actions::*)()> available_actions;
 
     std::string get_available_actions();
     void apply_action(const std::string &action);
+    void exit();
+    [[nodiscard]] bool is_running() const;
 };
 
 #endif //BANKMANAGEMENT_PROGRAM_ACTION_H

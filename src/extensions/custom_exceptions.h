@@ -21,9 +21,27 @@ class account_not_found_exception : public std::exception {
     }
 };
 
+class account_alreasy_exists : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "This account already exists.";
+    }
+};
+
 class logout_requirement_exception : public std::exception {
     [[nodiscard]] const char* what() const noexcept override {
         return "Please logout first.";
+    }
+};
+
+class plan_not_found_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "Plan not found.";
+    }
+};
+
+class plan_already_exists_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "This plan already exists.";
     }
 };
 
