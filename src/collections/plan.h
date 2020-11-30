@@ -7,6 +7,8 @@ class plan {
 public:
     plan(std::string plan_name);
 
+    std::string get_plan_name() const;
+
     bool operator==(const std::string &name);
     bool operator!=(const std::string &name);
 
