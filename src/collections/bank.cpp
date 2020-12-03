@@ -26,7 +26,9 @@ void bank::create_account(const std::string &name) {
 
 void bank::delete_account(const std::string &name) {
     auto account_it = find_account(name);
-    accounts.erase(account_it);
+    if (account_it->delete_account()) {
+        accounts.erase(account_it);
+    } else throw std::runtime_error("Can't delete account: " + name);
 }
 
 bank::accounts_container<account>::iterator bank::find_account(const std::string &name) {

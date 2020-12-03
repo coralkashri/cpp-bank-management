@@ -9,6 +9,9 @@
 class account {
 public:
     account(const std::string &db_path, const std::string &account_name);
+    ~account();
+
+    bool delete_account();
 
     [[nodiscard]] std::string get_account_name() const;
     [[nodiscard]] std::vector<std::string> get_plan_names() const;
@@ -26,6 +29,7 @@ private:
     plans_container<plan> plans;
     std::string account_name;
     std::string db_path;
+    double available_cash; // TODO Add cash management
 
     plans_container<plan>::iterator find_plan(const std::string &name);
     std::filesystem::path dir_path();
