@@ -2,15 +2,13 @@
 #include "account.h"
 #include "../extensions/custom_exceptions.h"
 
-account::account(const std::string &db_path, const std::string &account_name) : db_path(db_path), account_name(account_name), available_cash(0) {
-    // Create account in db
-    if (!std::filesystem::is_directory(dir_path()))
-        std::filesystem::create_directory(dir_path());
-
-    // Set current cash state to 0
-    if (auto file_path = (dir_path()/account_name) += "_cash.bin"; !std::filesystem::is_regular_file(file_path)) {
-        std::ofstream new_plan_file(file_path.string(), std::ios::trunc);
-        new_plan_file << 0;
+account::account(db_management *db_ptr, const std::string &account_name) : db_ptr(db_ptr), account_name(account_name), available_cash(0) {
+    try {
+        // Create account in db
+        db_ptr->create_account(account_name);
+    } catch (account_alreasy_exists &e) {
+        available_cash = db_ptr->get_account_free_cash(account_name);
+        std::cout << "Account already exists, free cash: " << available_cash << ".\n";
     }
 }
 
@@ -19,15 +17,12 @@ account::~account() {
 
 bool account::delete_account() {
     // Remove account from db
-    return std::filesystem::is_directory(dir_path()) && std::filesystem::remove(dir_path());
+    db_ptr->delete_account(account_name);
+    return true;
 }
 
 std::string account::get_account_name() const {
     return account_name;
-}
-
-std::filesystem::path account::dir_path() {
-    return std::filesystem::path(db_path)/account_name;
 }
 
 bool account::operator==(const std::string &name) {
@@ -47,12 +42,7 @@ bool account::operator!=(const std::string &name) {
 }
 
 void account::create_plan(const std::string &plan_name) {
-    try {
-        find_plan(plan_name);
-        throw plan_already_exists_exception();
-    } catch (plan_not_found_exception &e) {
-        plans.emplace_back(dir_path(), plan_name);
-    }
+    plans.emplace_back(db_ptr, account_name, plan_name);
 }
 
 void account::print_plan_details(const std::string &plan_name) {
@@ -65,11 +55,12 @@ void account::plan_management(const std::string &plan_name) {
     plan_it->plan_management();
 }
 
-void account::remove_plan(std::string plan_name) {
+void account::remove_plan(const std::string &plan_name) {
+    db_ptr->delete_plan(account_name, plan_name);
     auto plan_it = find_plan(plan_name);
-    if (plan_it->delete_plan()) {
-        plans.erase(plan_it);
-    } else throw std::runtime_error("Can't delete plan: " + plan_name);
+    double cash = plan_it->get_plan_cash();
+    plans.erase(plan_it);
+    // todo available_cash += cash;
 }
 
 std::vector<plan>::iterator account::find_plan(const std::string &name) {

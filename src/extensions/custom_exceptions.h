@@ -45,4 +45,10 @@ class plan_already_exists_exception : public std::exception {
     }
 };
 
+class table_field_type_matching_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "Table field type doesn't mach expected type.";
+    }
+};
+
 #endif //BANKMANAGEMENT_CUSTOM_EXCEPTIONS_H

@@ -15,6 +15,7 @@ program_action::program_action(std::string &&db_path) : user_actions(std::move(d
             {"remove_plan",            &available_user_actions::remove_plan},
             {"plan_management",        &available_user_actions::plan_management}
     };
+    is_running_flag = true;
 }
 
 void program_action::run() {

@@ -1,12 +1,20 @@
 #include "plan.h"
+#include "../db/db_management.h"
+#include "../extensions/custom_exceptions.h"
 #include <iostream>
 #include <filesystem>
 #include <fstream>
 
-plan::plan(const std::string &db_path, std::string plan_name) : db_path(db_path), plan_name(plan_name) {
-    if (auto file_path = (dir_path()/plan_name) += ".bin"; !std::filesystem::is_regular_file(file_path)) {
-        std::ofstream new_plan_file(file_path.string(), std::ios::trunc);
-        new_plan_file << 0;
+plan::plan(db_management *db_ptr, const std::string &account_name, const std::string &plan_name)
+        : db_ptr(db_ptr), account_name(account_name), plan_name(plan_name) {
+    try {
+        db_ptr->create_plan(account_name, plan_name);
+        cash = 0;
+    } catch (plan_already_exists_exception &e) {
+        // Sync plan with db
+        cash = db_ptr->get_plan_balance(account_name, plan_name);
+        std::cout << "Plan " << plan_name << " already exists in this account. Details:\n";
+        print_details();
     }
 }
 
@@ -18,6 +26,10 @@ std::string plan::get_plan_name() const {
     return plan_name;
 }
 
+double plan::get_plan_cash() {
+    return cash;
+}
+
 bool plan::operator==(const std::string &name) {
     return plan_name == name;
 }
@@ -27,11 +39,11 @@ bool plan::operator!=(const std::string &name) {
 }
 
 void plan::print_details() const {
-    if (auto file_path = (dir_path()/plan_name) += ".bin"; std::filesystem::is_regular_file(file_path)) {
-        std::ifstream new_plan_file(file_path.string(), std::ios::trunc);
-        double cash;
-        new_plan_file.read((char*)&cash, 1);
-    }
+    std::cout << "====================================\n";
+    std::cout << "Account: " << account_name << "\n";
+    std::cout << "Plan: " << plan_name << "\n";
+    std::cout << "Cash: " << cash << "\n";
+    std::cout << "====================================\n";
 }
 
 void plan::plan_management() {
@@ -39,9 +51,6 @@ void plan::plan_management() {
 }
 
 bool plan::delete_plan() {
-    return false;
-}
-
-std::filesystem::path plan::dir_path() {
-    return std::filesystem::path();
+    db_ptr->delete_plan(account_name, plan_name);
+    return true;
 }

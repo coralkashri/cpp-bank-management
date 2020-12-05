@@ -21,7 +21,7 @@ public:
 
 private:
     bank bank_obj;
-    account *current_account;
+    account *current_account = nullptr;
 
     void account_login_validation();
 

@@ -5,23 +5,26 @@
 #include <map>
 #include <string>
 #include "account.h"
+#include "../db/db_management.h"
 
 class bank {
 public:
-    bank(const std::string &db_path);
+    bank();
 
     [[nodiscard]] std::vector<std::string> get_account_names() const;
     account& get_account(const std::string &account_name);
-    void create_account(const std::string &name);
-    void delete_account(const std::string &name);
+    void create_account(const std::string &account_name);
+    void delete_account(const std::string &account_name);
 
 private:
     template <typename T>
     using accounts_container = std::vector<T>;
     accounts_container<account> accounts;
-    std::string db_path;
+    db_management db;
 
-    accounts_container<account>::iterator find_account(const std::string &name);
+    accounts_container<account>::iterator find_account(const std::string &account_name);
+
+    void restore_data_from_db();
 };
 
 #endif //BANKMANAGEMENT_BANK_H

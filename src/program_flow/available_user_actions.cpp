@@ -4,13 +4,13 @@
 #include "../extensions/std_extensions.h"
 
 
-available_user_actions::available_user_actions(std::string &&db_path) : bank_obj(db_path){}
+available_user_actions::available_user_actions(std::string &&db_path) : bank_obj() {}
 
 void available_user_actions::create_account() {
     std::string account_name;
     input("account name", account_name);
     bank_obj.create_account(account_name);
-    std::cout << "Account " << account_name << " successfully created.";
+    std::cout << "Account " << account_name << " successfully created.\n";
 }
 
 void available_user_actions::account_login() {
@@ -18,7 +18,7 @@ void available_user_actions::account_login() {
     std::string desired_account;
     input("account name", desired_account);
     current_account = &bank_obj.get_account(desired_account);
-    std::cout << "Successful login.";
+    std::cout << "Successful login.\n";
 }
 
 void available_user_actions::get_available_accounts() {
@@ -36,7 +36,7 @@ void available_user_actions::create_plan() {
     std::string plan_name;
     input("plan name", plan_name);
     current_account->create_plan(plan_name);
-    std::cout << "Plan \"" + plan_name + "\" successful created.";
+    std::cout << "Plan \"" + plan_name + "\" successful created.\n";
 }
 
 void available_user_actions::plan_management() {
@@ -49,7 +49,7 @@ void available_user_actions::plan_management() {
 void available_user_actions::account_logout() {
     account_login_validation();
     current_account = nullptr;
-    std::cout << "Successfully logout.";
+    std::cout << "Successfully logout.\n";
 }
 
 void available_user_actions::remove_account() {
@@ -57,7 +57,7 @@ void available_user_actions::remove_account() {
     std::string desired_account;
     input("account name", desired_account);
     bank_obj.delete_account(desired_account);
-    std::cout << "Account \"" << desired_account << "\" successfully deleted." << std::endl;
+    std::cout << "Account \"" << desired_account << "\" successfully deleted.\n";
 }
 
 void available_user_actions::remove_plan() {
@@ -65,7 +65,7 @@ void available_user_actions::remove_plan() {
     std::string plan_name;
     input("plan name", plan_name);
     current_account->remove_plan(plan_name);
-    std::cout << "Plan \"" << plan_name << "\" successfully deleted." << std::endl;
+    std::cout << "Plan \"" << plan_name << "\" successfully deleted.\n";
 }
 
 
