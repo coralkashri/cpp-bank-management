@@ -6,15 +6,17 @@
 #include <functional>
 #include "../collections/bank.h"
 #include "available_user_actions.h"
+#include "../structures/output_logger_manager.h"
 
 class program_action {
 public:
-    program_action(std::string &&db_path);
+    program_action();
 
     void run();
 
 private:
     bool is_running_flag = false;
+    output_logger_manager output;
     available_user_actions user_actions;
     std::map<std::string, void(available_user_actions::*)()> available_actions;
 

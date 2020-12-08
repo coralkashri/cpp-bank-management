@@ -3,7 +3,7 @@
 #include <sstream>
 #include "../extensions/custom_exceptions.h"
 
-program_action::program_action(std::string &&db_path) : user_actions(std::move(db_path)) {
+program_action::program_action() : user_actions(&output) {
     available_actions = {
             {"get_available_accounts", &available_user_actions::get_available_accounts},
             {"create_account",         &available_user_actions::create_account},

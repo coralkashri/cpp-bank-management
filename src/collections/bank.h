@@ -6,10 +6,11 @@
 #include <string>
 #include "account.h"
 #include "../db/db_management.h"
+#include "../structures/output_logger_manager.h"
 
 class bank {
 public:
-    bank();
+    bank(output_logger_manager *output);
 
     [[nodiscard]] std::vector<std::string> get_account_names() const;
     account& get_account(const std::string &account_name);
@@ -21,6 +22,7 @@ private:
     using accounts_container = std::vector<T>;
     accounts_container<account> accounts;
     db_management db;
+    output_logger_manager *output;
 
     accounts_container<account>::iterator find_account(const std::string &account_name);
 

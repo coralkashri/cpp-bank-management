@@ -3,9 +3,6 @@
 #include "../extensions/custom_exceptions.h"
 #include "../extensions/std_extensions.h"
 
-
-available_user_actions::available_user_actions(std::string &&db_path) : bank_obj() {}
-
 void available_user_actions::create_account() {
     std::string account_name;
     input("account name", account_name);

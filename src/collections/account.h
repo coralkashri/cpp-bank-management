@@ -6,10 +6,11 @@
 #include <filesystem>
 #include "plan.h"
 #include "../db/db_management.h"
+#include "../structures/output_logger_manager.h"
 
 class account {
 public:
-    account(db_management *db_ptr, const std::string &account_name);
+    account(db_management *db_ptr, const std::string &account_name, output_logger_manager *output);
     ~account();
 
     bool delete_account();
@@ -31,6 +32,7 @@ private:
     std::string account_name;
     db_management *db_ptr;
     double available_cash; // TODO Add cash management
+    output_logger_manager *output;
 
     plans_container<plan>::iterator find_plan(const std::string &name);
 };

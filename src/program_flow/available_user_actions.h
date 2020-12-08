@@ -3,10 +3,11 @@
 
 #include "../collections/bank.h"
 #include "../extensions/custom_concepts.h"
+#include "../structures/output_logger_manager.h"
 
 class available_user_actions {
 public:
-    available_user_actions(std::string &&db_path);
+    explicit available_user_actions(output_logger_manager *output) : output(output), bank_obj(output) {};
 
     void get_available_accounts();
     void create_account();
@@ -22,6 +23,7 @@ public:
 private:
     bank bank_obj;
     account *current_account = nullptr;
+    output_logger_manager *output;
 
     void account_login_validation();
 

@@ -1,7 +1,7 @@
 #include "bank.h"
 #include "../extensions/custom_exceptions.h"
 
-bank::bank() {
+bank::bank(output_logger_manager *output) : output(output) {
     restore_data_from_db();
 }
 
@@ -22,7 +22,7 @@ void bank::create_account(const std::string &account_name) {
         find_account(account_name);
         throw account_alreasy_exists();
     } catch (account_not_found_exception &e) {
-        accounts.emplace_back(&db, account_name);
+        accounts.emplace_back(&db, account_name, output);
     }
 }
 
@@ -41,12 +41,14 @@ bank::accounts_container<account>::iterator bank::find_account(const std::string
 }
 
 void bank::restore_data_from_db() {
+    output->turn_off_printing_state();
     std::vector<std::string> accounts_from_db = db.get_all_accounts();
     for (auto &account_name : accounts_from_db) {
-        accounts.emplace_back(&db, account_name);
+        accounts.emplace_back(&db, account_name, output);
         std::vector<std::string> account_plans = db.get_all_account_plans(account_name);
         for (auto &plan_name : account_plans) {
             accounts.back().create_plan(plan_name);
         }
     }
+    output->turn_on_printing_state();
 }

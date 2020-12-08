@@ -4,10 +4,11 @@
 #include <string>
 #include <filesystem>
 #include "../db/db_management.h"
+#include "../structures/output_logger_manager.h"
 
 class plan {
 public:
-    plan(db_management *db_ptr, const std::string &account_name, const std::string &plan_name);
+    plan(db_management *db_ptr, const std::string &account_name, const std::string &plan_name, output_logger_manager *output);
     ~plan();
 
     bool delete_plan();
@@ -25,6 +26,7 @@ private:
     std::string account_name;
     std::string plan_name;
     double cash;
+    output_logger_manager *output;
 };
 
 #endif //BANKMANAGEMENT_PLAN_H
