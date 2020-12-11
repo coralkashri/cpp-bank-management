@@ -2,13 +2,16 @@
 #include <iostream>
 #include <sstream>
 #include "../extensions/custom_exceptions.h"
+#include "../extensions/std_extensions.h"
 
 program_action::program_action() : user_actions(&output) {
-    available_actions = {
+    available_bank_actions = {
             {"get_available_accounts", &available_user_actions::get_available_accounts},
             {"create_account",         &available_user_actions::create_account},
             {"remove_account",         &available_user_actions::remove_account},
             {"account_login",          &available_user_actions::account_login},
+    };
+    available_account_actions = {
             {"logout",                 &available_user_actions::account_logout},
             {"get_plans",              &available_user_actions::get_available_plans},
             {"create_plan",            &available_user_actions::create_plan},
@@ -16,6 +19,7 @@ program_action::program_action() : user_actions(&output) {
             {"plan_management",        &available_user_actions::plan_management}
     };
     is_running_flag = true;
+    exit_keyword = "exit";
 }
 
 void program_action::run() {
@@ -23,7 +27,7 @@ void program_action::run() {
     while (is_running()) {
         std::cout << "Select action:\n" << get_available_actions() << std::endl;
         std::cin >> action;
-        if (action == "exit") this->exit();
+        if (action == exit_keyword) this->exit();
         else try {
             apply_action(action);
         } catch (std::exception& e) {
@@ -34,30 +38,26 @@ void program_action::run() {
 
 std::string program_action::get_available_actions() {
     std::stringstream str;
+    std::vector<std::string> options_vec;
 
     if (!user_actions.is_logged_in()) {
         // Bank actions
-        str << "- get_available_accounts" << "\n"
-            << "- create_account" << "\n"
-            << "- remove_account" << "\n"
-            << "- account_login" << "\n"
-            << "- exit" << "\n";
+        options_vec.emplace_back(exit_keyword);
+        available_actions_set = &available_bank_actions;
     } else {
         // Account action
-        str << "- logout" << "\n"
-            << "- get_plans" << "\n"
-            << "- create_plan" << "\n"
-            << "- remove_plan" << "\n"
-            << "- plan_management" << "\n";
+        available_actions_set = &available_account_actions;
     }
-
+    auto options = *available_actions_set | std::views::keys | std::views::common;
+    options_vec.insert(options_vec.begin(), options.begin(), options.end());
+    str << options_vec;
     return str.str();
 }
 
 void program_action::apply_action(const std::string &action) {
-    if (auto it = available_actions.find(action); it != available_actions.end()) {
-        (user_actions.*(it->second))();
-    } else {
+    try {
+        (user_actions.*(available_actions_set->at(action)))();
+    } catch (std::out_of_range &e) {
         throw action_not_found_exception();
     }
 }

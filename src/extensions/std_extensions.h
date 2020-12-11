@@ -10,7 +10,7 @@ namespace std {
     ostream& operator<<(ostream &out, vector<T> vec) {
         size_t number = 1;
         for (auto &elem : vec) {
-            out << number << ".\t" << elem << "\n";
+            out << number++ << ".\t" << elem << "\n";
         }
         return out;
     }

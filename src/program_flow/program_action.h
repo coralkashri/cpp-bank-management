@@ -18,7 +18,10 @@ private:
     bool is_running_flag = false;
     output_logger_manager output;
     available_user_actions user_actions;
-    std::map<std::string, void(available_user_actions::*)()> available_actions;
+    std::map<std::string, void(available_user_actions::*)()> available_bank_actions;
+    std::map<std::string, void(available_user_actions::*)()> available_account_actions;
+    std::map<std::string, void(available_user_actions::*)()> *available_actions_set;
+    std::string exit_keyword;
 
     std::string get_available_actions();
     void apply_action(const std::string &action);

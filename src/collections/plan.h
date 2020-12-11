@@ -5,6 +5,7 @@
 #include <filesystem>
 #include "../db/db_management.h"
 #include "../structures/output_logger_manager.h"
+#include "../program_flow/plan_management.h"
 
 class plan {
 public:
@@ -13,10 +14,10 @@ public:
 
     bool delete_plan();
 
-    std::string get_plan_name() const;
-    double get_plan_cash();
+    [[nodiscard]] std::string get_plan_name() const;
+    [[nodiscard]] double get_plan_cash() const;
     void print_details() const;
-    void plan_management();
+    void plan_actions();
 
     bool operator==(const std::string &name);
     bool operator!=(const std::string &name);
@@ -25,7 +26,7 @@ private:
     db_management *db_ptr;
     std::string account_name;
     std::string plan_name;
-    double cash;
+    plan_management management;
     output_logger_manager *output;
 };
 

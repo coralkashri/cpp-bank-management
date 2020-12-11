@@ -53,7 +53,7 @@ void account::print_plan_details(const std::string &plan_name) {
 
 void account::plan_management(const std::string &plan_name) {
     auto plan_it = find_plan(plan_name);
-    plan_it->plan_management();
+    plan_it->plan_actions();
 }
 
 void account::remove_plan(const std::string &plan_name) {
