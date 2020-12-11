@@ -31,7 +31,7 @@ private:
     plans_container<plan> plans;
     std::string account_name;
     db_management *db_ptr;
-    double available_cash; // TODO Add cash management
+    //double available_cash; // TODO Add cash management
     output_logger_manager *output;
 
     plans_container<plan>::iterator find_plan(const std::string &name);
