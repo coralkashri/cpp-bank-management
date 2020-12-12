@@ -22,7 +22,7 @@ void plan_management::choose_option() {
         print_details();
         output->printer() << "Available plan actions:\n" << options_vec;
         std::cin >> desired_action;
-        try {
+        if (desired_action != exit_keyword) try {
             apply_action(desired_action);
         } catch (std::exception &e) {
             std::cout << e.what() << "\n";
