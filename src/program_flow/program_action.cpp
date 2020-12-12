@@ -28,7 +28,7 @@ void program_action::run() {
     while (is_running()) {
         std::cout << "Select action:\n" << get_available_actions() << std::endl;
         std::cin >> action;
-        if (action == exit_keyword) this->exit();
+        if (!user_actions.is_logged_in() && action == exit_keyword) this->exit();
         else try {
             apply_action(action);
         } catch (std::exception& e) {
@@ -37,8 +37,7 @@ void program_action::run() {
     }
 }
 
-std::string program_action::get_available_actions() {
-    std::stringstream str;
+std::vector<std::string> program_action::get_available_actions() {
     std::vector<std::string> options_vec;
 
     if (!user_actions.is_logged_in()) {
@@ -51,8 +50,7 @@ std::string program_action::get_available_actions() {
     }
     auto options = *available_actions_set | std::views::keys | std::views::common;
     options_vec.insert(options_vec.begin(), options.begin(), options.end());
-    str << options_vec;
-    return str.str();
+    return options_vec;
 }
 
 void program_action::apply_action(const std::string &action) {

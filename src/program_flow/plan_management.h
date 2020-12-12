@@ -16,8 +16,10 @@ private:
     void increase_plan_cash() const;
     void decrease_plan_cash() const;
     void apply_action(const std::string &action) const;
+    std::vector<std::string> get_available_options() const;
 
     std::map<std::string, void(plan_management::*)() const> available_actions;
+    std::string exit_keyword;
 
     db_management *db_ptr;
     std::string account_name;

@@ -23,7 +23,7 @@ private:
     std::map<std::string, void(available_user_actions::*)()> *available_actions_set;
     std::string exit_keyword;
 
-    std::string get_available_actions();
+    std::vector<std::string> get_available_actions();
     void apply_action(const std::string &action);
     void exit();
     [[nodiscard]] bool is_running() const;
