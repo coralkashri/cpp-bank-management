@@ -15,6 +15,7 @@ public:
 private:
     void increase_plan_cash() const;
     void decrease_plan_cash() const;
+    void apply_action(const std::string &action) const;
 
     std::map<std::string, void(plan_management::*)() const> available_actions;
 

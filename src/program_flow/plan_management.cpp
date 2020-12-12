@@ -7,8 +7,7 @@ plan_management::plan_management(db_management *db_ptr, const std::string &accou
                                  : db_ptr(db_ptr), account_name(account_name), plan_name(plan_name), output(output) {
     available_actions = {
             {"add_cash", &plan_management::increase_plan_cash},
-            {"decrease_cash", &plan_management::decrease_plan_cash},
-            {"print_details", &plan_management::print_details}
+            {"decrease_cash", &plan_management::decrease_plan_cash}
     };
 }
 
@@ -20,12 +19,13 @@ void plan_management::choose_option() {
     std::string desired_action;
 
     while (desired_action != exit_keyword) {
+        print_details();
         output->printer() << "Available plan actions:\n" << options_vec;
         std::cin >> desired_action;
         try {
-            (this->*(available_actions.at(desired_action)))();
-        } catch (std::out_of_range &e) {
-            throw action_not_found_exception();
+            apply_action(desired_action);
+        } catch (std::exception &e) {
+            std::cout << e.what() << "\n";
         }
     }
 }
@@ -49,4 +49,12 @@ void plan_management::print_details() const {
     output->printer() << "Plan: " << plan_name << "\n";
     output->printer() << "Cash: " << cash << "\n";
     output->printer() << "====================================\n";
+}
+
+void plan_management::apply_action(const std::string &action) const {
+    try {
+        (this->*(available_actions.at(action)))();
+    } catch (std::out_of_range &e) {
+        throw action_not_found_exception();
+    }
 }
