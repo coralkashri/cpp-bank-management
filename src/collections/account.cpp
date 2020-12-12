@@ -13,7 +13,12 @@ account::account(db_management *db_ptr, const std::string &account_name, output_
     }
 }
 
-account::~account() {
+void account::print_account_details() {
+    double cash = db_ptr->get_account_free_cash(account_name);
+    output->printer() << "====================================\n";
+    output->printer() << "Account: " << account_name << "\n";
+    output->printer() << "Free Cash: " << cash << "\n";
+    output->printer() << "====================================\n";
 }
 
 bool account::delete_account() {

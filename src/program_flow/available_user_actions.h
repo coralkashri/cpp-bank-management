@@ -19,7 +19,9 @@ public:
     void plan_management();
     void create_plan();
     void remove_plan();
+
     bool is_logged_in();
+    void print_account_details();
 
 private:
     bank bank_obj;

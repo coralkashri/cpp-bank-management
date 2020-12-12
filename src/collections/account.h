@@ -11,10 +11,11 @@
 class account {
 public:
     account(db_management *db_ptr, const std::string &account_name, output_logger_manager *output);
-    ~account();
+    ~account() = default;
 
     bool delete_account();
 
+    void print_account_details();
     [[nodiscard]] std::string get_account_name() const;
     [[nodiscard]] std::vector<std::string> get_plan_names() const;
     void print_plan_details(const std::string &plan_name);

@@ -73,10 +73,6 @@ void available_user_actions::remove_plan() {
 }
 
 
-bool available_user_actions::is_logged_in() {
-    return current_account;
-}
-
 void available_user_actions::account_login_validation() {
     if (!is_logged_in())
         throw account_not_selected_exception();
@@ -85,4 +81,13 @@ void available_user_actions::account_login_validation() {
 void available_user_actions::account_logout_validation() {
     if (is_logged_in())
         throw logout_requirement_exception();
+}
+
+bool available_user_actions::is_logged_in() {
+    return current_account;
+}
+
+void available_user_actions::print_account_details() {
+    account_login_validation();
+    current_account->print_account_details();
 }

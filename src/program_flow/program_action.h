@@ -27,6 +27,7 @@ private:
     void apply_action(const std::string &action);
     void exit();
     [[nodiscard]] bool is_running() const;
+    [[nodiscard]] bool is_account_management_state();
 };
 
 #endif //BANKMANAGEMENT_PROGRAM_ACTION_H

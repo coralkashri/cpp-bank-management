@@ -26,9 +26,12 @@ program_action::program_action() : user_actions(&output) {
 void program_action::run() {
     std::string action;
     while (is_running()) {
+        if (is_account_management_state()) {
+            user_actions.print_account_details();
+        }
         std::cout << "Select action:\n" << get_available_actions() << std::endl;
         std::cin >> action;
-        if (!user_actions.is_logged_in() && action == exit_keyword) this->exit();
+        if (!is_account_management_state() && action == exit_keyword) this->exit();
         else try {
             apply_action(action);
         } catch (std::exception& e) {
@@ -40,7 +43,7 @@ void program_action::run() {
 std::vector<std::string> program_action::get_available_actions() {
     std::vector<std::string> options_vec;
 
-    if (!user_actions.is_logged_in()) {
+    if (!is_account_management_state()) {
         // Bank actions
         options_vec.emplace_back(exit_keyword);
         available_actions_set = &available_bank_actions;
@@ -67,4 +70,8 @@ void program_action::exit() {
 
 bool program_action::is_running() const {
     return is_running_flag;
+}
+
+bool program_action::is_account_management_state() {
+    return user_actions.is_logged_in();
 }
