@@ -22,5 +22,4 @@ namespace std {
     }
 }
 
-
 #endif //BANKMANAGEMENT_STD_EXTENSIONS_H
