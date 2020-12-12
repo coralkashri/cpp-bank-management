@@ -12,9 +12,9 @@ public:
 
     void create_account(const std::string &account_name);
     void delete_account(const std::string &account_name);
-    std::vector<std::string> get_all_accounts();
-    bool is_account_exists(const std::string &account_name);
-    double get_account_free_cash(const std::string &account_name);
+    [[nodiscard]] std::vector<std::string> get_all_accounts() const;
+    [[nodiscard]] bool is_account_exists(const std::string &account_name) const;
+    [[nodiscard]] double get_account_free_cash(const std::string &account_name) const;
 
 private:
     std::string accounts_table_name;

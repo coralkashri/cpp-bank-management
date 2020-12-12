@@ -27,7 +27,7 @@ void db_management::delete_account(const std::string &account_name) {
     accounts_management.delete_account(account_name);
 }
 
-double db_management::get_account_free_cash(const std::string &account_name) {
+double db_management::get_account_free_cash(const std::string &account_name) const {
     return accounts_management.get_account_free_cash(account_name);
 }
 
@@ -46,21 +46,21 @@ void db_management::modify_plan_balance(const std::string &account_name, const s
     plans_management.modify_plan_balance(account_name, plan_name, cash);
 }
 
-double db_management::get_plan_balance(const std::string &account_name, const std::string &plan_name) {
+double db_management::get_plan_balance(const std::string &account_name, const std::string &plan_name) const {
     if (!is_account_exists(account_name)) throw account_not_found_exception();
     return plans_management.get_plan_balance(account_name, plan_name);
 }
 
-std::vector<std::string> db_management::get_all_accounts() {
+std::vector<std::string> db_management::get_all_accounts() const {
     return accounts_management.get_all_accounts();
 }
 
-std::vector<std::string> db_management::get_all_account_plans(const std::string &account_name) {
+std::vector<std::string> db_management::get_all_account_plans(const std::string &account_name) const {
     if (!is_account_exists(account_name)) throw account_not_found_exception();
     return plans_management.get_all_account_plans(account_name);
 }
 
-bool db_management::is_account_exists(const std::string &account_name) {
+bool db_management::is_account_exists(const std::string &account_name) const {
     return accounts_management.is_account_exists(account_name);
 }
 

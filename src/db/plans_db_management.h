@@ -13,14 +13,14 @@ public:
     void create_plan(const std::string &account_name, const std::string &plan_name);
     void delete_plan(const std::string &account_name, const std::string &plan_name);
     void modify_plan_balance(const std::string &account_name, const std::string &plan_name, double cash);
-    double get_plan_balance(const std::string &account_name, const std::string &plan_name);
-    std::vector<std::string> get_all_account_plans(const std::string &account_name);
+    [[nodiscard]] double get_plan_balance(const std::string &account_name, const std::string &plan_name) const;
+    [[nodiscard]] std::vector<std::string> get_all_account_plans(const std::string &account_name) const;
     void delete_all_account_plans(const std::string &account_name);
 
 private:
     std::string plans_table_name;
     mongocxx::database *db_ptr;
-    bool is_plan_exists(const std::string &account_name, const std::string &plan_name);
+    [[nodiscard]] bool is_plan_exists(const std::string &account_name, const std::string &plan_name) const;
 };
 
 #endif //BANKMANAGEMENT_PLANS_DB_MANAGEMENT_H

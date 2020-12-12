@@ -47,7 +47,7 @@ void accounts_db_management::delete_account(const std::string &account_name) {
     /* todo delete_all_account_plans(account_name);*/
 }
 
-double accounts_db_management::get_account_free_cash(const std::string &account_name) {
+double accounts_db_management::get_account_free_cash(const std::string &account_name) const {
     // DB desired table access
     mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];
 
@@ -68,7 +68,7 @@ double accounts_db_management::get_account_free_cash(const std::string &account_
     throw std::runtime_error("Get account free cash -> account found but error occurred when accessing it.");
 }
 
-std::vector<std::string> accounts_db_management::get_all_accounts() {
+std::vector<std::string> accounts_db_management::get_all_accounts() const {
     // DB desired table access
     mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];
 
@@ -84,7 +84,7 @@ std::vector<std::string> accounts_db_management::get_all_accounts() {
     return account_names;
 }
 
-bool accounts_db_management::is_account_exists(const std::string &account_name) {
+bool accounts_db_management::is_account_exists(const std::string &account_name) const {
     // DB desired table access
     mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];
 

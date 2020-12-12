@@ -78,7 +78,7 @@ void plans_db_management::modify_plan_balance(const std::string &account_name, c
     plans_table.update_one(filter.view(), update.view());
 }
 
-double plans_db_management::get_plan_balance(const std::string &account_name, const std::string &plan_name) {
+double plans_db_management::get_plan_balance(const std::string &account_name, const std::string &plan_name) const {
     // DB desired table access
     mongocxx::collection plans_table = (*db_ptr)[plans_table_name];
 
@@ -100,7 +100,7 @@ double plans_db_management::get_plan_balance(const std::string &account_name, co
     throw std::runtime_error("Get plan balance -> plan found but error occurred when accessing it.");
 }
 
-bool plans_db_management::is_plan_exists(const std::string &account_name, const std::string &plan_name) {
+bool plans_db_management::is_plan_exists(const std::string &account_name, const std::string &plan_name) const {
     // DB desired table access
     mongocxx::collection plans_table = (*db_ptr)[plans_table_name];
 
@@ -113,7 +113,7 @@ bool plans_db_management::is_plan_exists(const std::string &account_name, const 
     return (bool) maybe_result;
 }
 
-std::vector<std::string> plans_db_management::get_all_account_plans(const std::string &account_name) {
+std::vector<std::string> plans_db_management::get_all_account_plans(const std::string &account_name) const {
     // DB desired table access
     mongocxx::collection plans_table = (*db_ptr)[plans_table_name];
 
