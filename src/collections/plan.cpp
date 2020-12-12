@@ -29,11 +29,11 @@ double plan::get_plan_cash() const {
     return db_ptr->get_plan_balance(account_name, plan_name);
 }
 
-bool plan::operator==(const std::string &name) {
+bool plan::operator==(const std::string &name) const {
     return plan_name == name;
 }
 
-bool plan::operator!=(const std::string &name) {
+bool plan::operator!=(const std::string &name) const {
     return !(*this == name);
 }
 
@@ -46,6 +46,7 @@ void plan::plan_actions() {
 }
 
 bool plan::delete_plan() {
+    // Remove plan from db
     db_ptr->delete_plan(account_name, plan_name);
     return true;
 }

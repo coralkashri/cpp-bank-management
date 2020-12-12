@@ -15,7 +15,7 @@ public:
 
     bool delete_account();
 
-    void print_account_details();
+    void print_account_details() const;
     [[nodiscard]] std::string get_account_name() const;
     [[nodiscard]] std::vector<std::string> get_plan_names() const;
     void print_plan_details(const std::string &plan_name);
@@ -23,8 +23,8 @@ public:
     void plan_management(const std::string &plan_name);
     void remove_plan(const std::string &plan_name);
 
-    bool operator==(const std::string &name);
-    bool operator!=(const std::string &name);
+    bool operator==(const std::string &name) const;
+    bool operator!=(const std::string &name) const;
 
 private:
     template<typename T>

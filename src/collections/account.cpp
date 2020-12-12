@@ -13,7 +13,7 @@ account::account(db_management *db_ptr, const std::string &account_name, output_
     }
 }
 
-void account::print_account_details() {
+void account::print_account_details() const {
     double cash = db_ptr->get_account_free_cash(account_name);
     output->printer() << "====================================\n";
     output->printer() << "Account: " << account_name << "\n";
@@ -31,8 +31,12 @@ std::string account::get_account_name() const {
     return account_name;
 }
 
-bool account::operator==(const std::string &name) {
+bool account::operator==(const std::string &name) const {
     return name == account_name;
+}
+
+bool account::operator!=(const std::string &name) const {
+    return !(*this == name);
 }
 
 std::vector<std::string> account::get_plan_names() const {
@@ -41,10 +45,6 @@ std::vector<std::string> account::get_plan_names() const {
         plan_names.emplace_back(plan.get_plan_name());
     }
     return plan_names;
-}
-
-bool account::operator!=(const std::string &name) {
-    return !(*this == name);
 }
 
 void account::create_plan(const std::string &plan_name) {
@@ -62,9 +62,9 @@ void account::plan_management(const std::string &plan_name) {
 }
 
 void account::remove_plan(const std::string &plan_name) {
-    db_ptr->delete_plan(account_name, plan_name);
     auto plan_it = find_plan(plan_name);
     double cash = plan_it->get_plan_cash();
+    plan_it->delete_plan();
     plans.erase(plan_it);
     // todo available_cash += cash;
 }

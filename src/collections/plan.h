@@ -19,8 +19,8 @@ public:
     void print_details() const;
     void plan_actions();
 
-    bool operator==(const std::string &name);
-    bool operator!=(const std::string &name);
+    bool operator==(const std::string &name) const;
+    bool operator!=(const std::string &name) const;
 
 private:
     db_management *db_ptr;
