@@ -12,11 +12,12 @@ program_action::program_action() : user_actions(&output) {
             {"account_login",          &available_user_actions::account_login},
     };
     available_account_actions = {
-            {"logout",                 &available_user_actions::account_logout},
-            {"get_plans",              &available_user_actions::get_available_plans},
-            {"create_plan",            &available_user_actions::create_plan},
-            {"remove_plan",            &available_user_actions::remove_plan},
-            {"plan_management",        &available_user_actions::plan_management}
+            {"logout",            &available_user_actions::account_logout},
+            {"get_plans",         &available_user_actions::get_available_plans},
+            {"get_plans_details", &available_user_actions::get_available_plans_details},
+            {"create_plan",       &available_user_actions::create_plan},
+            {"remove_plan",       &available_user_actions::remove_plan},
+            {"plan_management",   &available_user_actions::plan_management}
     };
     is_running_flag = true;
     exit_keyword = "exit";

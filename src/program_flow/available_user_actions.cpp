@@ -28,6 +28,13 @@ void available_user_actions::get_available_plans() {
     std::cout << current_account->get_plan_names();
 }
 
+void available_user_actions::get_available_plans_details() {
+    account_login_validation();
+    for (auto &plan_name : current_account->get_plan_names()) {
+        current_account->print_plan_details(plan_name);
+    }
+}
+
 void available_user_actions::create_plan() {
     account_login_validation();
     std::string plan_name;

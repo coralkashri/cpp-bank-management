@@ -15,6 +15,7 @@ public:
     void account_logout();
     void remove_account();
     void get_available_plans();
+    void get_available_plans_details();
     void plan_management();
     void create_plan();
     void remove_plan();
