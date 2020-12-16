@@ -27,6 +27,10 @@ void db_management::delete_account(const std::string &account_name) {
     accounts_management.delete_account(account_name);
 }
 
+void db_management::modify_account_free_cash(const std::string &account_name, double cash) {
+    accounts_management.modify_free_cash(account_name, cash);
+}
+
 double db_management::get_account_free_cash(const std::string &account_name) const {
     return accounts_management.get_account_free_cash(account_name);
 }
@@ -36,9 +40,9 @@ void db_management::create_plan(const std::string &account_name, const std::stri
     plans_management.create_plan(account_name, plan_name);
 }
 
-void db_management::delete_plan(const std::string &account_name, const std::string &plan_name) {
+double db_management::delete_plan(const std::string &account_name, const std::string &plan_name) {
     if (!is_account_exists(account_name)) throw account_not_found_exception();
-    plans_management.delete_plan(account_name, plan_name);
+    return plans_management.delete_plan(account_name, plan_name);
 }
 
 void db_management::modify_plan_balance(const std::string &account_name, const std::string &plan_name, double cash) {

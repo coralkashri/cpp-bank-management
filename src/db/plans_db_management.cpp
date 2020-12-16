@@ -36,7 +36,7 @@ void plans_db_management::create_plan(const std::string &account_name, const std
     bsoncxx::stdx::optional<mongocxx::result::insert_one> result = plans_table.insert_one(doc_value.view());
 }
 
-void plans_db_management::delete_plan(const std::string &account_name, const std::string &plan_name) {
+double plans_db_management::delete_plan(const std::string &account_name, const std::string &plan_name) {
     // DB desired table access
     mongocxx::collection plans_table = (*db_ptr)[plans_table_name];
 
@@ -45,13 +45,14 @@ void plans_db_management::delete_plan(const std::string &account_name, const std
 
     // Collect cash
     double current_plan_cash = get_plan_balance(account_name, plan_name);
-    // TODO insert this cash to account "free_cash" field
 
     // Perform delete
     plans_table.delete_one(document{}
                                    << "account_name" << account_name
                                    << "plan_name" << plan_name
                                    << finalize);
+
+    return current_plan_cash;
 }
 
 void plans_db_management::modify_plan_balance(const std::string &account_name, const std::string &plan_name, double cash) {

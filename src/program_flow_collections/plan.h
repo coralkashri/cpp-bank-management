@@ -12,7 +12,7 @@ public:
     plan(db_management *db_ptr, const std::string &account_name, const std::string &plan_name, output_logger_manager *output);
     ~plan();
 
-    bool delete_plan();
+    double delete_plan();
 
     [[nodiscard]] std::string get_plan_name() const;
     [[nodiscard]] double get_plan_cash() const;

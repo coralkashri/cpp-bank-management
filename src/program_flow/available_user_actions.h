@@ -14,6 +14,8 @@ public:
     void account_login();
     void account_logout();
     void remove_account();
+    void increase_free_cash();
+    void decrease_free_cash();
     void get_available_plans();
     void get_available_plans_details();
     void plan_management();

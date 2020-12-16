@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../extensions/custom_exceptions.h"
 #include "../extensions/std_extensions.h"
+#include "../extensions/custom_validations.h"
 
 void available_user_actions::create_account() {
     std::string account_name;
@@ -62,6 +63,24 @@ void available_user_actions::remove_account() {
     input("account name", desired_account);
     bank_obj.delete_account(desired_account);
     std::cout << "Account \"" << desired_account << "\" successfully deleted.\n";
+}
+
+void available_user_actions::increase_free_cash() {
+    account_login_validation();
+    double cash;
+    std::input("cash to add", cash);
+    if (!custom_validations::is_positive(cash))
+        throw expected_positive_number_exception();
+    current_account->modify_free_cash(cash);
+}
+
+void available_user_actions::decrease_free_cash() {
+    account_login_validation();
+    double cash;
+    std::input("cash to decrease", cash);
+    if (!custom_validations::is_positive(cash))
+        throw expected_positive_number_exception();
+    current_account->modify_free_cash(-cash);
 }
 
 void available_user_actions::remove_plan() {

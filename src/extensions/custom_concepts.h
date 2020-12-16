@@ -13,4 +13,7 @@ concept Inputable = requires(T t) {
     { std::cin >> t };
 };
 
+template <typename T>
+concept Numerical = std::is_arithmetic_v<T>;
+
 #endif //BANKMANAGEMENT_CUSTOM_CONCEPTS_H

@@ -15,6 +15,7 @@ public:
 
     bool delete_account();
 
+    void modify_free_cash(double cash);
     void print_account_details() const;
     [[nodiscard]] std::string get_account_name() const;
     [[nodiscard]] std::vector<std::string> get_plan_names() const;

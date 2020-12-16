@@ -16,6 +16,8 @@ public:
 private:
     void increase_plan_cash() const;
     void decrease_plan_cash() const;
+    void validate_account_free_cash(double required_cash_to_save) const;
+    void validate_plan_cash_to_release(double desired_cash_to_release) const;
     void apply_action(const std::string &action) const;
     std::vector<keys_management<std::string>> get_available_options() const;
 

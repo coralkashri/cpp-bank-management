@@ -27,6 +27,10 @@ bool account::delete_account() {
     return true;
 }
 
+void account::modify_free_cash(double cash) {
+    db_ptr->modify_account_free_cash(account_name, cash);
+}
+
 std::string account::get_account_name() const {
     return account_name;
 }
@@ -63,10 +67,9 @@ void account::plan_management(const std::string &plan_name) {
 
 void account::remove_plan(const std::string &plan_name) {
     auto plan_it = find_plan(plan_name);
-    double cash = plan_it->get_plan_cash();
-    plan_it->delete_plan();
+    double plan_cash = plan_it->delete_plan();
     plans.erase(plan_it);
-    // todo available_cash += cash;
+    db_ptr->modify_account_free_cash(account_name, plan_cash);
 }
 
 std::vector<plan>::iterator account::find_plan(const std::string &name) {

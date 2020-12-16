@@ -12,6 +12,7 @@ public:
 
     void create_account(const std::string &account_name);
     void delete_account(const std::string &account_name);
+    void modify_free_cash(const std::string &account_name, double cash);
     [[nodiscard]] std::vector<std::string> get_all_accounts() const;
     [[nodiscard]] bool is_account_exists(const std::string &account_name) const;
     [[nodiscard]] double get_account_free_cash(const std::string &account_name) const;

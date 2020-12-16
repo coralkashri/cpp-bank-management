@@ -14,12 +14,14 @@ program_action::program_action() : user_actions(&output) {
             {{{"account_login",          "alin", ""}, "Manage selected account."},                      &available_user_actions::account_login},
     };
     available_account_actions = {
-            {{{"logout",            "lout", ""}, "Back to accounts management."},                      &available_user_actions::account_logout},
-            {{{"get_plans",         "gp",   ""}, "Get all plan names in this account."},               &available_user_actions::get_available_plans},
-            {{{"get_plans_details", "gpd",  ""}, "Get all plans details in this account."},            &available_user_actions::get_available_plans_details},
-            {{{"create_plan",       "cp",   ""}, "Create new plan and associate it to this account."}, &available_user_actions::create_plan},
-            {{{"remove_plan",       "rp",   ""}, "Remove plan from this account."},                    &available_user_actions::remove_plan},
-            {{{"plan_management",   "pm",   ""}, "Manage selected plan in this account."},             &available_user_actions::plan_management}
+            {{{"logout",             "lout", ""}, "Back to accounts management."},                      &available_user_actions::account_logout},
+            {{{"add_free_cash",      "afc",  ""}, "Increase this account free cash."},                      &available_user_actions::increase_free_cash},
+            {{{"decrease_free_cash", "dfc",  ""}, "Decrease this account free cash."},                      &available_user_actions::decrease_free_cash},
+            {{{"get_plans",          "gp",   ""}, "Get all plan names in this account."},               &available_user_actions::get_available_plans},
+            {{{"get_plans_details",  "gpd",  ""}, "Get all plans details in this account."},            &available_user_actions::get_available_plans_details},
+            {{{"create_plan",        "cp",   ""}, "Create new plan and associate it to this account."}, &available_user_actions::create_plan},
+            {{{"remove_plan",        "rp",   ""}, "Remove plan from this account."},                    &available_user_actions::remove_plan},
+            {{{"plan_management",    "pm",   ""}, "Manage selected plan in this account."},             &available_user_actions::plan_management}
     };
     is_running_flag = true;
     exit_keyword = "exit";

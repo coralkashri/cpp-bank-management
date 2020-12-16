@@ -47,6 +47,29 @@ void accounts_db_management::delete_account(const std::string &account_name) {
     /* todo delete_all_account_plans(account_name);*/
 }
 
+void accounts_db_management::modify_free_cash(const std::string &account_name, double cash) {
+    // DB desired table access
+    mongocxx::collection plans_table = (*db_ptr)[accounts_table_name];
+
+    // Validations
+    if (!is_account_exists(account_name)) throw account_not_found_exception();
+
+    // Prepare update
+    auto filter = document{}
+            << "account_name" << account_name
+            << finalize;
+
+    auto update = document{}
+            << "$inc"
+            << open_document
+            << "free_cash" << cash
+            << close_document
+            << finalize;
+
+    // Perform update
+    plans_table.update_one(filter.view(), update.view());
+}
+
 double accounts_db_management::get_account_free_cash(const std::string &account_name) const {
     // DB desired table access
     mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];

@@ -45,8 +45,7 @@ void plan::plan_actions() {
     management.choose_option();
 }
 
-bool plan::delete_plan() {
-    // Remove plan from db
-    db_ptr->delete_plan(account_name, plan_name);
-    return true;
+double plan::delete_plan() {
+    // Remove plan from db and return it's cash
+    return db_ptr->delete_plan(account_name, plan_name);
 }

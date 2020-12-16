@@ -1,6 +1,7 @@
 #include "plan_management.h"
 #include "../extensions/std_extensions.h"
 #include "../extensions/custom_exceptions.h"
+#include "../extensions/custom_validations.h"
 
 plan_management::plan_management(db_management *db_ptr, const std::string &account_name, const std::string &plan_name,
                                  output_logger_manager *output)
@@ -29,13 +30,21 @@ void plan_management::choose_option() {
 void plan_management::increase_plan_cash() const {
     double cash;
     std::input("cash to add", cash);
+    if (!custom_validations::is_positive(cash))
+        throw expected_positive_number_exception();
+    validate_account_free_cash(cash);
     db_ptr->modify_plan_balance(account_name, plan_name, cash);
+    db_ptr->modify_account_free_cash(account_name, -cash);
 }
 
 void plan_management::decrease_plan_cash() const {
     double cash;
     std::input("cash to decrease", cash);
+    if (!custom_validations::is_positive(cash))
+        throw expected_positive_number_exception();
+    validate_plan_cash_to_release(cash);
     db_ptr->modify_plan_balance(account_name, plan_name, -cash);
+    db_ptr->modify_account_free_cash(account_name, cash);
 }
 
 void plan_management::print_details() const {
@@ -60,4 +69,14 @@ void plan_management::apply_action(const std::string &action) const {
     } catch (std::out_of_range &e) {
         throw action_not_found_exception();
     }
+}
+
+void plan_management::validate_account_free_cash(double required_cash_to_save) const {
+    if (db_ptr->get_account_free_cash(account_name) < required_cash_to_save)
+        throw not_enough_free_cash_in_account_exception();
+}
+
+void plan_management::validate_plan_cash_to_release(double desired_cash_to_release) const {
+    if (db_ptr->get_plan_balance(account_name, plan_name) < desired_cash_to_release)
+        throw not_enough_cash_in_plan_exception();
 }

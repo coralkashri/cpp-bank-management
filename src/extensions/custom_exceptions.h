@@ -51,4 +51,28 @@ class table_field_type_matching_exception : public std::exception {
     }
 };
 
+class not_enough_free_cash_in_account_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "You don't have enough money in this account to apply the last action.";
+    }
+};
+
+class not_enough_cash_in_plan_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "You don't have enough money in this plan to apply the last action.";
+    }
+};
+
+class expected_positive_number_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "Illegal action: expected positive number.";
+    }
+};
+
+class expected_negative_number_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "Illegal action: expected negative number.";
+    }
+};
+
 #endif //BANKMANAGEMENT_CUSTOM_EXCEPTIONS_H
