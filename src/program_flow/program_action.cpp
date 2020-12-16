@@ -15,8 +15,8 @@ program_action::program_action() : user_actions(&output) {
     };
     available_account_actions = {
             {{{"logout",             "lout", ""}, "Back to accounts management."},                      &available_user_actions::account_logout},
-            {{{"add_free_cash",      "afc",  ""}, "Increase this account free cash."},                      &available_user_actions::increase_free_cash},
-            {{{"decrease_free_cash", "dfc",  ""}, "Decrease this account free cash."},                      &available_user_actions::decrease_free_cash},
+            {{{"add_free_cash",      "afc",  ""}, "Increase this account free cash."},                  &available_user_actions::increase_free_cash},
+            {{{"decrease_free_cash", "dfc",  ""}, "Decrease this account free cash."},                  &available_user_actions::decrease_free_cash},
             {{{"get_plans",          "gp",   ""}, "Get all plan names in this account."},               &available_user_actions::get_available_plans},
             {{{"get_plans_details",  "gpd",  ""}, "Get all plans details in this account."},            &available_user_actions::get_available_plans_details},
             {{{"create_plan",        "cp",   ""}, "Create new plan and associate it to this account."}, &available_user_actions::create_plan},
