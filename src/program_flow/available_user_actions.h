@@ -1,7 +1,7 @@
 #ifndef BANKMANAGEMENT_AVAILABLE_USER_ACTION_H
 #define BANKMANAGEMENT_AVAILABLE_USER_ACTION_H
 
-#include "../collections/bank.h"
+#include "../program_flow_collections/bank.h"
 #include "../extensions/custom_concepts.h"
 #include "../structures/output_logger_manager.h"
 

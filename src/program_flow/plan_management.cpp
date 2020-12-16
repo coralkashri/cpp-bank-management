@@ -6,8 +6,8 @@ plan_management::plan_management(db_management *db_ptr, const std::string &accou
                                  output_logger_manager *output)
                                  : db_ptr(db_ptr), account_name(account_name), plan_name(plan_name), output(output) {
     available_actions = {
-            {"add_cash", &plan_management::increase_plan_cash},
-            {"decrease_cash", &plan_management::decrease_plan_cash}
+            {{{"add_cash",      "ac", ""}, "Move cash from free cash in this account to this plan."}, &plan_management::increase_plan_cash},
+            {{{"decrease_cash", "dc", ""}, "Move cash from this plan to this account's free cash."}, &plan_management::decrease_plan_cash}
     };
     exit_keyword = "exit";
 }
@@ -47,10 +47,10 @@ void plan_management::print_details() const {
     output->printer() << "====================================\n";
 }
 
-std::vector<std::string> plan_management::get_available_options() const {
-    auto options = available_actions | std::views::keys | std::views::common;
-    std::vector<std::string> options_vec(options.begin(), options.end());
-    options_vec.emplace_back(exit_keyword); // Exit option
+std::vector<keys_management<std::string>> plan_management::get_available_options() const {
+    auto options = available_actions.get_key_relations();
+    std::vector<keys_management<std::string>> options_vec(options.begin(), options.end());
+    options_vec.emplace_back(keys_management<std::string>{exit_keyword}); // Exit option
     return options_vec;
 }
 

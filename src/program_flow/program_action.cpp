@@ -4,20 +4,22 @@
 #include "../extensions/custom_exceptions.h"
 #include "../extensions/std_extensions.h"
 
+using namespace std::string_literals;
+
 program_action::program_action() : user_actions(&output) {
     available_bank_actions = {
-            {"get_available_accounts", &available_user_actions::get_available_accounts},
-            {"create_account",         &available_user_actions::create_account},
-            {"remove_account",         &available_user_actions::remove_account},
-            {"account_login",          &available_user_actions::account_login},
+            {{{"get_available_accounts", "gaa",  ""}, "Print registered account names."},               &available_user_actions::get_available_accounts},
+            {{{"create_account",         "ca",   ""}, "Create a new account."},                         &available_user_actions::create_account},
+            {{{"remove_account",         "ra",   ""}, "Delete account and it's cash from the system."}, &available_user_actions::remove_account},
+            {{{"account_login",          "alin", ""}, "Manage selected account."},                      &available_user_actions::account_login},
     };
     available_account_actions = {
-            {"logout",            &available_user_actions::account_logout},
-            {"get_plans",         &available_user_actions::get_available_plans},
-            {"get_plans_details", &available_user_actions::get_available_plans_details},
-            {"create_plan",       &available_user_actions::create_plan},
-            {"remove_plan",       &available_user_actions::remove_plan},
-            {"plan_management",   &available_user_actions::plan_management}
+            {{{"logout",            "lout", ""}, "Back to accounts management."},                      &available_user_actions::account_logout},
+            {{{"get_plans",         "gp",   ""}, "Get all plan names in this account."},               &available_user_actions::get_available_plans},
+            {{{"get_plans_details", "gpd",  ""}, "Get all plans details in this account."},            &available_user_actions::get_available_plans_details},
+            {{{"create_plan",       "cp",   ""}, "Create new plan and associate it to this account."}, &available_user_actions::create_plan},
+            {{{"remove_plan",       "rp",   ""}, "Remove plan from this account."},                    &available_user_actions::remove_plan},
+            {{{"plan_management",   "pm",   ""}, "Manage selected plan in this account."},             &available_user_actions::plan_management}
     };
     is_running_flag = true;
     exit_keyword = "exit";
@@ -40,18 +42,18 @@ void program_action::run() {
     }
 }
 
-std::vector<std::string> program_action::get_available_actions() {
-    std::vector<std::string> options_vec;
+std::vector<keys_management<std::string>> program_action::get_available_actions() {
+    std::vector<keys_management<std::string>> options_vec;
 
     if (!is_account_management_state()) {
         // Bank actions
-        options_vec.emplace_back(exit_keyword);
+        options_vec.emplace_back(keys_management<std::string>{exit_keyword});
         available_actions_set = &available_bank_actions;
     } else {
         // Account action
         available_actions_set = &available_account_actions;
     }
-    auto options = *available_actions_set | std::views::keys | std::views::common;
+    auto options = available_actions_set->get_key_relations();
     options_vec.insert(options_vec.begin(), options.begin(), options.end());
     return options_vec;
 }

@@ -4,9 +4,10 @@
 #include <map>
 #include <string>
 #include <functional>
-#include "../collections/bank.h"
+#include "../program_flow_collections/bank.h"
 #include "available_user_actions.h"
 #include "../structures/output_logger_manager.h"
+#include "../external_tools/multimap/multimap.h"
 
 class program_action {
 public:
@@ -18,12 +19,12 @@ private:
     bool is_running_flag = false;
     output_logger_manager output;
     available_user_actions user_actions;
-    std::map<std::string, void(available_user_actions::*)()> available_bank_actions;
-    std::map<std::string, void(available_user_actions::*)()> available_account_actions;
-    std::map<std::string, void(available_user_actions::*)()> *available_actions_set;
+    multimap<std::string, void(available_user_actions::*)()> available_bank_actions;
+    multimap<std::string, void(available_user_actions::*)()> available_account_actions;
+    multimap<std::string, void(available_user_actions::*)()> *available_actions_set;
     std::string exit_keyword;
 
-    std::vector<std::string> get_available_actions();
+    std::vector<keys_management<std::string>> get_available_actions();
     void apply_action(const std::string &action);
     void exit();
     [[nodiscard]] bool is_running() const;
