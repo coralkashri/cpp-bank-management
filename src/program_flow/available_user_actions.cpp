@@ -3,10 +3,11 @@
 #include "../extensions/custom_exceptions.h"
 #include "../extensions/std_extensions.h"
 #include "../extensions/custom_validations.h"
+#include "../extensions/my_shell.h"
 
 void available_user_actions::create_account() {
     std::string account_name;
-    input("account name", account_name);
+    my_shell::input("account name", account_name);
     bank_obj.create_account(account_name);
     std::cout << "Account " << account_name << " successfully created.\n";
 }
@@ -14,7 +15,7 @@ void available_user_actions::create_account() {
 void available_user_actions::account_login() {
     account_logout_validation();
     std::string desired_account;
-    input("account name", desired_account);
+    my_shell::input("account name", desired_account);
     current_account = &bank_obj.get_account(desired_account);
     std::cout << "Successful login.\n";
 }
@@ -39,7 +40,7 @@ void available_user_actions::get_available_plans_details() {
 void available_user_actions::create_plan() {
     account_login_validation();
     std::string plan_name;
-    input("plan name", plan_name);
+    my_shell::input("plan name", plan_name);
     current_account->create_plan(plan_name);
     std::cout << "Plan \"" + plan_name + "\" successful created.\n";
 }
@@ -47,7 +48,7 @@ void available_user_actions::create_plan() {
 void available_user_actions::plan_management() {
     account_login_validation();
     std::string plan_name;
-    input("plan name", plan_name);
+    my_shell::input("plan name", plan_name);
     current_account->plan_management(plan_name);
 }
 
@@ -60,7 +61,7 @@ void available_user_actions::account_logout() {
 void available_user_actions::remove_account() {
     account_logout_validation();
     std::string desired_account;
-    input("account name", desired_account);
+    my_shell::input("account name", desired_account);
     bank_obj.delete_account(desired_account);
     std::cout << "Account \"" << desired_account << "\" successfully deleted.\n";
 }
@@ -68,7 +69,7 @@ void available_user_actions::remove_account() {
 void available_user_actions::increase_free_cash() {
     account_login_validation();
     double cash;
-    std::input("cash to add", cash);
+    my_shell::input("cash to add", cash);
     if (!custom_validations::is_positive(cash))
         throw expected_positive_number_exception();
     current_account->modify_free_cash(cash);
@@ -77,7 +78,7 @@ void available_user_actions::increase_free_cash() {
 void available_user_actions::decrease_free_cash() {
     account_login_validation();
     double cash;
-    std::input("cash to decrease", cash);
+    my_shell::input("cash to decrease", cash);
     if (!custom_validations::is_positive(cash))
         throw expected_positive_number_exception();
     current_account->modify_free_cash(-cash);
@@ -86,7 +87,7 @@ void available_user_actions::decrease_free_cash() {
 void available_user_actions::remove_plan() {
     account_login_validation();
     std::string plan_name;
-    input("plan name", plan_name);
+    my_shell::input("plan name", plan_name);
     current_account->remove_plan(plan_name);
     std::cout << "Plan \"" << plan_name << "\" successfully deleted.\n";
 }

@@ -1,5 +1,6 @@
 #include "plan_management.h"
 #include "../extensions/std_extensions.h"
+#include "../extensions/my_shell.h"
 #include "../extensions/custom_exceptions.h"
 #include "../extensions/custom_validations.h"
 
@@ -17,8 +18,8 @@ void plan_management::choose_option() {
     std::string desired_action;
     while (desired_action != exit_keyword) {
         print_details();
-        output->printer() << "Available plan actions:\n" << get_available_options();
-        std::cin >> desired_action;
+        output->printer() << "Available plan actions:\n" << get_available_options() << "\n";
+        my_shell::method_input(desired_action);
         if (desired_action != exit_keyword) try {
             apply_action(desired_action);
         } catch (std::exception &e) {
@@ -29,7 +30,7 @@ void plan_management::choose_option() {
 
 void plan_management::increase_plan_cash() const {
     double cash;
-    std::input("cash to add", cash);
+    my_shell::input("cash to add", cash);
     if (!custom_validations::is_positive(cash))
         throw expected_positive_number_exception();
     validate_account_free_cash(cash);
@@ -39,7 +40,7 @@ void plan_management::increase_plan_cash() const {
 
 void plan_management::decrease_plan_cash() const {
     double cash;
-    std::input("cash to decrease", cash);
+    my_shell::input("cash to decrease", cash);
     if (!custom_validations::is_positive(cash))
         throw expected_positive_number_exception();
     validate_plan_cash_to_release(cash);

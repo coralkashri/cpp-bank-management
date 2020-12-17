@@ -14,12 +14,6 @@ namespace std {
         }
         return out;
     }
-
-    template <Inputable T>
-    void input(std::string input_request, T &variable) {
-        std::cout << "Please enter " << input_request << ": ";
-        std::cin >> variable;
-    }
 }
 
 #endif //BANKMANAGEMENT_STD_EXTENSIONS_H

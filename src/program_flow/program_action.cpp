@@ -1,8 +1,8 @@
 #include "program_action.h"
 #include <iostream>
-#include <sstream>
 #include "../extensions/custom_exceptions.h"
 #include "../extensions/std_extensions.h"
+#include "../extensions/my_shell.h"
 
 using namespace std::string_literals;
 
@@ -34,7 +34,7 @@ void program_action::run() {
             user_actions.print_account_details();
         }
         std::cout << "Select action:\n" << get_available_actions() << std::endl;
-        std::cin >> action;
+        my_shell::method_input(action);
         if (!is_account_management_state() && action == exit_keyword) this->exit();
         else try {
             apply_action(action);
