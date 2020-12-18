@@ -10,14 +10,21 @@
 #include <string>
 #include <type_traits>
 #include <ranges>
+#include <functional>
 
-template <typename KEY_T>
+struct keys_management_default_print;
+
+template <typename KEY_T, typename TO_STR = keys_management_default_print>
 class keys_management {
+private:
+    friend TO_STR;
+    std::function<std::ostream&(std::ostream& out, const keys_management<KEY_T, TO_STR> &ref)> print_function = TO_STR();
+
 public:
-    keys_management(const keys_management<KEY_T>&) = default;
-    keys_management(keys_management<KEY_T>&&) = default;
-    keys_management& operator=(const keys_management<KEY_T>&) = default;
-    keys_management& operator=(keys_management<KEY_T>&&) = default;
+    keys_management(const keys_management<KEY_T, TO_STR>&) = default;
+    keys_management(keys_management<KEY_T, TO_STR>&&) = default;
+    keys_management& operator=(const keys_management<KEY_T, TO_STR>&) = default;
+    keys_management& operator=(keys_management<KEY_T, TO_STR>&&) = default;
 
     keys_management(const std::initializer_list<KEY_T>& keys, const std::string &description = "")
             : description(description) {
@@ -40,14 +47,14 @@ public:
         return local_max > ref;
     }
 
-    bool operator==(const keys_management<KEY_T> &ref) const {
+    bool operator==(const keys_management<KEY_T, TO_STR> &ref) const {
         for (auto &key : ref.keys) {
             if (key == *this) return true;
         }
         return false;
     }
 
-    bool operator<(const keys_management<KEY_T> &ref) const {
+    bool operator<(const keys_management<KEY_T, TO_STR> &ref) const {
         auto ref_min = find_relative_key(ref.keys, std::less());
         return *this < ref_min;
     }
@@ -56,19 +63,8 @@ public:
         return !(*this == ref);
     }
 
-    friend std::ostream& operator<<(std::ostream& out, const keys_management<KEY_T> &ref) {
-        out << "[";
-        for (auto &key : ref.keys) {
-            out << key;
-            if (&key != &ref.keys.back()) {
-                out << ", ";
-            }
-        }
-        out << "]";
-        if (!ref.description.empty()) {
-            out << " - " << ref.description;
-        }
-        return out;
+    friend std::ostream& operator<<(std::ostream& out, const keys_management<KEY_T, TO_STR> &ref) {
+        return ref.print_function(out, ref);
     }
 
     [[nodiscard]] std::string get_description() const {return description; }
@@ -87,6 +83,24 @@ private:
             if (op(rel_key, *it)) rel_key = *it;
         }
         return rel_key;
+    }
+};
+
+struct keys_management_default_print {
+    template <typename KEY_T>
+    std::ostream& operator()(std::ostream& out, const keys_management<KEY_T, keys_management_default_print> &keys_management_ref) {
+        out << "[";
+        for (auto &key : keys_management_ref.keys) {
+            out << key;
+            if (&key != &keys_management_ref.keys.back()) {
+                out << ", ";
+            }
+        }
+        out << "]";
+        if (!keys_management_ref.description.empty()) {
+            out << " - " << keys_management_ref.description;
+        }
+        return out;
     }
 };
 

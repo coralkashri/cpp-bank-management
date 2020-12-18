@@ -9,7 +9,7 @@ plan_management::plan_management(db_management *db_ptr, const std::string &accou
                                  : db_ptr(db_ptr), account_name(account_name), plan_name(plan_name), output(output) {
     available_actions = {
             {{{"add_cash",      "ac", ""}, "Move cash from free cash in this account to this plan."}, &plan_management::increase_plan_cash},
-            {{{"decrease_cash", "dc", ""}, "Move cash from this plan to this account's free cash."}, &plan_management::decrease_plan_cash}
+            {{{"decrease_cash", "dc", ""}, "Move cash from this plan to this account's free cash."},  &plan_management::decrease_plan_cash}
     };
     exit_keyword = "exit";
 }
