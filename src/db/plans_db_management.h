@@ -13,6 +13,12 @@ public:
     void create_plan(const std::string &account_name, const std::string &plan_name);
     [[nodiscard]] double delete_plan(const std::string &account_name, const std::string &plan_name);
     void modify_plan_balance(const std::string &account_name, const std::string &plan_name, double cash);
+
+    /// Every month move this cash from the account
+    void set_monthly_income(const std::string &account_name, const std::string &plan_name, double cash);
+
+    /// Every month remove this cash from this plan (without moving it back to the account)
+    void set_monthly_outcome(const std::string &account_name, const std::string &plan_name, double cash);
     [[nodiscard]] double get_plan_balance(const std::string &account_name, const std::string &plan_name) const;
     [[nodiscard]] std::vector<std::string> get_all_account_plans(const std::string &account_name) const;
     void delete_all_account_plans(const std::string &account_name);

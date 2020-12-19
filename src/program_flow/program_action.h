@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include <functional>
-#include "../program_flow_collections/bank.h"
+#include "collections/bank.h"
 #include "available_user_actions.h"
 #include "../structures/output_logger_manager.h"
 #include "../external_tools/multimap/multimap.h"

@@ -5,8 +5,8 @@
 #include <vector>
 #include <filesystem>
 #include "plan.h"
-#include "../db/db_management.h"
-#include "../structures/output_logger_manager.h"
+#include "../../db/db_management.h"
+#include "../../structures/output_logger_manager.h"
 
 class account {
 public:
@@ -16,6 +16,7 @@ public:
     bool delete_account();
 
     void modify_free_cash(double cash);
+    void update_monthly_income(const std::string& income_source_name, double income);
     void print_account_details() const;
     [[nodiscard]] std::string get_account_name() const;
     [[nodiscard]] std::vector<std::string> get_plan_names() const;

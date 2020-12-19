@@ -1,7 +1,7 @@
 #ifndef BANKMANAGEMENT_AVAILABLE_USER_ACTION_H
 #define BANKMANAGEMENT_AVAILABLE_USER_ACTION_H
 
-#include "../program_flow_collections/bank.h"
+#include "collections/bank.h"
 #include "../extensions/custom_concepts.h"
 #include "../structures/output_logger_manager.h"
 
@@ -16,6 +16,7 @@ public:
     void remove_account();
     void increase_free_cash();
     void decrease_free_cash();
+    void update_account_monthly_income();
     void get_available_plans();
     void get_available_plans_details();
     void plan_management();

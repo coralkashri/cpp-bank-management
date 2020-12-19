@@ -1,6 +1,6 @@
 #include "plan.h"
-#include "../db/db_management.h"
-#include "../extensions/custom_exceptions.h"
+#include "../../db/db_management.h"
+#include "../../extensions/custom_exceptions.h"
 #include <iostream>
 #include <filesystem>
 #include <fstream>

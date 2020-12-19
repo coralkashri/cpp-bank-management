@@ -31,6 +31,45 @@ void accounts_db_management::create_account(const std::string &account_name) {
     bsoncxx::document::value doc_value = builder
             << "account_name" << account_name
             << "free_cash" << 0.
+            << "monthly_income" << open_array
+            /*
+                << open_document
+                    << "income_source" << "name"
+                    << "income_cash" << 0.
+                    << "is_single_time" << false
+                << close_document
+            */
+            << close_array
+            << "monthly_outcome" << open_array
+            /*
+                << open_document
+                    << "outcome_name" << "name"
+                    << "outcome_cash" << 0.
+                    << "is_single_time" << false
+                << close_document
+            */
+            << close_array
+            << "archive" << open_array
+            /*
+                << open_document
+                    << "month": "01.12.2020" // December
+                    << "monthly_income" << open_array
+                        << open_document
+                            << "income_source" << "name"
+                            << "income_cash" << 0.
+                            << "is_single_time" << false
+                        << close_document
+                    << close_array
+                    << "monthly_outcome" << open_array
+                        << open_document
+                            << "outcome_name" << "name"
+                            << "outcome_cash" << 0.
+                            << "is_single_time" << false
+                        << close_document
+                    << close_array
+                << close_document
+            */
+            << close_array
             << bsoncxx::builder::stream::finalize;
     bsoncxx::stdx::optional<mongocxx::result::insert_one> result = accounts_table.insert_one(doc_value.view());
 }
@@ -44,12 +83,11 @@ void accounts_db_management::delete_account(const std::string &account_name) {
 
     // Perform delete
     accounts_table.delete_one(document{} << "account_name" << account_name << finalize);
-    /* todo delete_all_account_plans(account_name);*/
 }
 
 void accounts_db_management::modify_free_cash(const std::string &account_name, double cash) {
     // DB desired table access
-    mongocxx::collection plans_table = (*db_ptr)[accounts_table_name];
+    mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];
 
     // Validations
     if (!is_account_exists(account_name)) throw account_not_found_exception();
@@ -67,7 +105,45 @@ void accounts_db_management::modify_free_cash(const std::string &account_name, d
             << finalize;
 
     // Perform update
-    plans_table.update_one(filter.view(), update.view());
+    accounts_table.update_one(filter.view(), update.view());
+}
+
+void accounts_db_management::update_account_monthly_income(const std::string &account_name,
+                                                           const std::string &income_source_name,
+                                                           double income) {
+    // DB desired table access
+    mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];
+
+    // Validations
+    if (!is_account_exists(account_name)) throw account_not_found_exception();
+
+    // Prepare update
+    auto filter = document{}
+            << "account_name" << account_name
+            << finalize;
+
+    auto update = document{}
+            << "$push" << open_document
+                << "monthly_income" << open_document
+                    << "income_source" << income_source_name
+                    << "income_cash" << income
+                    << "is_single_time" << false
+                << close_document
+            << close_document
+            << finalize;
+
+    // Perform update
+    accounts_table.update_one(filter.view(), update.view());
+}
+
+void accounts_db_management::update_account_monthly_outcome(const std::string &account_name,
+                                                            const std::string &outcome_name,
+                                                            double outcome_cash) {
+}
+
+void accounts_db_management::add_account_single_time_outcome(const std::string &account_name,
+                                                             const std::string &outcome_name,
+                                                             double outcome_cash) {
 }
 
 double accounts_db_management::get_account_free_cash(const std::string &account_name) const {
@@ -80,8 +156,8 @@ double accounts_db_management::get_account_free_cash(const std::string &account_
     // Get balance
     bsoncxx::stdx::optional<bsoncxx::document::value> account =
             accounts_table.find_one(document{}
-                                         << "account_name" << account_name
-                                         << finalize);
+                                            << "account_name" << account_name
+                                            << finalize);
     if (account) {
         bsoncxx::document::element cash_elem = account->view()["free_cash"];
         if (cash_elem.type() != bsoncxx::type::k_double)

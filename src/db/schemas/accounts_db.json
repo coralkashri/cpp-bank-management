@@ -1,0 +1,37 @@
+{
+  "account_name": "string",
+  "free_cash": 0.0,
+  "monthly_income": [
+    {
+      "income_source": "string",
+      "income_cash": 0.0,
+      "is_single_time": false
+    }
+  ],
+  "monthly_outcome": [
+    {
+      "outcome_name": "string",
+      "outcome_cash": 0.0,
+      "is_single_time": false
+    }
+  ],
+  "archive": [
+    {
+      "month": "01.12.2020", // December
+      "monthly_income": [
+        {
+          "income_source": "string",
+          "income_cash": 0.0,
+          "is_single_time": false
+        }
+      ],
+      "monthly_outcome": [
+        {
+          "outcome_name": "string",
+          "outcome_cash": 0.0,
+          "is_single_time": false
+        }
+      ]
+    }
+  ]
+}

@@ -19,6 +19,8 @@ db_management::db_management() : client(mongocxx::uri{}), db(client["bank_manage
                                 accounts_management(&db) {
 }
 
+// Accounts Management
+
 void db_management::create_account(const std::string &account_name) {
     accounts_management.create_account(account_name);
 }
@@ -35,6 +37,13 @@ void db_management::modify_account_free_cash(const std::string &account_name, do
 double db_management::get_account_free_cash(const std::string &account_name) const {
     return accounts_management.get_account_free_cash(account_name);
 }
+
+void db_management::update_account_monthly_income(const std::string &account_name, const std::string &income_source_name, double income) {
+    accounts_management.update_account_monthly_income(account_name, income_source_name, income);
+}
+
+
+// Plans Management
 
 void db_management::create_plan(const std::string &account_name, const std::string &plan_name) {
     if (!is_account_exists(account_name)) throw account_not_found_exception();
@@ -67,8 +76,4 @@ std::vector<std::string> db_management::get_all_account_plans(const std::string 
 
 bool db_management::is_account_exists(const std::string &account_name) const {
     return accounts_management.is_account_exists(account_name);
-}
-
-void db_management::delete_all_account_plans(const std::string &account_name) {
-    plans_management.delete_all_account_plans(account_name);
 }

@@ -12,10 +12,20 @@ class db_management {
 public:
     db_management();
 
+    // Accounts Management
     void create_account(const std::string &account_name);
     void delete_account(const std::string &account_name);
     void modify_account_free_cash(const std::string &account_name, double cash);
     [[nodiscard]] double get_account_free_cash(const std::string &account_name) const;
+    void update_account_monthly_income(const std::string &account_name, const std::string &income_source_name, double income);
+    void pause_account_monthly_income(const std::string &account_name, const std::string &income_source);
+    void set_account_single_time_income(const std::string &account_name, double income);
+    void update_account_monthly_outcome(const std::string &account_name, const std::string &outcome_name, double outcome_cash);
+    void add_account_single_time_outcome(const std::string &account_name, const std::string &outcome_name, double outcome_cash);
+    [[nodiscard]] std::vector<outcome_source> get_account_outcome_details(const std::string &account_name, const boost::gregorian::date &month) const;
+    [[nodiscard]] std::vector<income_source> get_account_income_details(const std::string &account_name, const boost::gregorian::date &month) const;
+
+    // Plans Management
     void create_plan(const std::string &account_name, const std::string &plan_name);
     double delete_plan(const std::string &account_name, const std::string &plan_name);
     void modify_plan_balance(const std::string &account_name, const std::string &plan_name, double cash);
@@ -31,7 +41,6 @@ private:
     accounts_db_management accounts_management;
 
     [[nodiscard]] bool is_account_exists(const std::string &account_name) const;
-    void delete_all_account_plans(const std::string &account_name);
 };
 
 #endif //BANKMANAGEMENT_DB_MANAGEMENT_H
