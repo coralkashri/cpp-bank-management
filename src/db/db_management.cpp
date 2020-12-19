@@ -24,6 +24,7 @@ void db_management::create_account(const std::string &account_name) {
 }
 
 void db_management::delete_account(const std::string &account_name) {
+    plans_management.delete_all_account_plans(account_name);
     accounts_management.delete_account(account_name);
 }
 
