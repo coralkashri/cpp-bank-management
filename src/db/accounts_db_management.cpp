@@ -8,12 +8,11 @@
 #include <bsoncxx/builder/stream/array.hpp>
 #include "../extensions/custom_exceptions.h"
 
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::sub_array;
+using bsoncxx::builder::basic::sub_document;
+using bsoncxx::builder::basic::document;
+using bsoncxx::builder::basic::array;
 
 accounts_db_management::accounts_db_management(mongocxx::database *db_ptr) : db_ptr(db_ptr) {
     accounts_table_name = "accounts";
@@ -27,51 +26,43 @@ void accounts_db_management::create_account(const std::string &account_name) {
     if (is_account_exists(account_name)) throw account_alreasy_exists();
 
     // Insert account
-    auto builder = bsoncxx::builder::stream::document{};
-    bsoncxx::document::value doc_value = builder
-            << "account_name" << account_name
-            << "free_cash" << 0.
-            << "monthly_income" << open_array
-            /*
-                << open_document
-                    << "income_source" << "name"
-                    << "income_cash" << 0.
-                    << "is_single_time" << false
-                << close_document
-            */
-            << close_array
-            << "monthly_outcome" << open_array
-            /*
-                << open_document
-                    << "outcome_name" << "name"
-                    << "outcome_cash" << 0.
-                    << "is_single_time" << false
-                << close_document
-            */
-            << close_array
-            << "archive" << open_array
-            /*
-                << open_document
-                    << "month": "01.12.2020" // December
-                    << "monthly_income" << open_array
-                        << open_document
-                            << "income_source" << "name"
-                            << "income_cash" << 0.
-                            << "is_single_time" << false
-                        << close_document
-                    << close_array
-                    << "monthly_outcome" << open_array
-                        << open_document
-                            << "outcome_name" << "name"
-                            << "outcome_cash" << 0.
-                            << "is_single_time" << false
-                        << close_document
-                    << close_array
-                << close_document
-            */
-            << close_array
-            << bsoncxx::builder::stream::finalize;
-    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = accounts_table.insert_one(doc_value.view());
+    document builder;
+    builder.append(kvp("account_name", account_name));
+    builder.append(kvp("free_cash", 0.));
+    builder.append(kvp("monthly_income", [](sub_array monthly_income) {
+        /*monthly_income.append([](sub_document elem) {
+            elem.append(kvp("income_source", "name"));
+            elem.append(kvp("income_cash", 0.));
+            elem.append(kvp("is_single_time", false));
+        });*/
+    }));
+    builder.append(kvp("monthly_outcome", [](sub_array monthly_outcome) {
+        /*monthly_outcome.append([](sub_document elem) {
+            elem.append(kvp("outcome_name", "name"));
+            elem.append(kvp("outcome_cash", 0.));
+            elem.append(kvp("is_single_time", false));
+        });*/
+    }));
+    builder.append(kvp("archive", [](sub_array archive) {
+        /*archive.append([](sub_document elem) {
+            elem.append(kvp("month", "01.12.2020")); // December
+            elem.append(kvp("monthly_income", [](sub_array monthly_income) {
+                monthly_income.append([](sub_document elem) {
+                    elem.append(kvp("income_source", "name"));
+                    elem.append(kvp("income_cash", 0.));
+                    elem.append(kvp("is_single_time", false));
+                });
+            }));
+            elem.append(kvp("monthly_outcome", [](sub_array monthly_outcome) {
+                monthly_outcome.append([](sub_document elem) {
+                    elem.append(kvp("outcome_name", "name"));
+                    elem.append(kvp("outcome_cash", 0.));
+                    elem.append(kvp("is_single_time", false));
+                });
+            }));
+        });*/
+    }));
+    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = accounts_table.insert_one(builder.view());
 }
 
 void accounts_db_management::delete_account(const std::string &account_name) {
@@ -82,7 +73,7 @@ void accounts_db_management::delete_account(const std::string &account_name) {
     if (!is_account_exists(account_name)) throw account_not_found_exception();
 
     // Perform delete
-    accounts_table.delete_one(document{} << "account_name" << account_name << finalize);
+    accounts_table.delete_one(bsoncxx::builder::basic::make_document(kvp("account_name", account_name)).view());
 }
 
 void accounts_db_management::modify_free_cash(const std::string &account_name, double cash) {
@@ -92,17 +83,15 @@ void accounts_db_management::modify_free_cash(const std::string &account_name, d
     // Validations
     if (!is_account_exists(account_name)) throw account_not_found_exception();
 
-    // Prepare update
-    auto filter = document{}
-            << "account_name" << account_name
-            << finalize;
+    // Prepare filter
+    document filter;
+    filter.append(kvp("account_name", account_name));
 
-    auto update = document{}
-            << "$inc"
-            << open_document
-            << "free_cash" << cash
-            << close_document
-            << finalize;
+    // Prepare update
+    document update;
+    update.append(kvp("$inc", [cash](sub_document $inc) {
+        $inc.append(kvp("free_cash", cash));
+    }));
 
     // Perform update
     accounts_table.update_one(filter.view(), update.view());
@@ -117,20 +106,30 @@ void accounts_db_management::update_account_monthly_income(const std::string &ac
     // Validations
     if (!is_account_exists(account_name)) throw account_not_found_exception();
 
-    // Prepare update
-    auto filter = document{}
-            << "account_name" << account_name
-            << finalize;
+    // Prepare filter
+    bool income_exists = is_income_exists(account_name, income_source_name);
+    bsoncxx::builder::basic::document filter;
+    filter.append(kvp("account_name", account_name));
+    if (income_exists) {
+        filter.append(kvp("monthly_income.income_source", income_source_name));
+    }
 
-    auto update = document{}
-            << "$push" << open_document
-                << "monthly_income" << open_document
-                    << "income_source" << income_source_name
-                    << "income_cash" << income
-                    << "is_single_time" << false
-                << close_document
-            << close_document
-            << finalize;
+    // Prepare update
+    bsoncxx::builder::basic::document update;
+    if (income_exists) {
+        update.append(kvp("$set", [income](sub_document $set) {
+            $set.append(kvp("monthly_income.$.income_cash", income));
+            $set.append(kvp("monthly_income.$.is_single_time", false));
+        }));
+    } else {
+        update.append(kvp("$push", [income, income_source_name](sub_document $push) {
+            $push.append(kvp("monthly_income", [income, income_source_name](sub_document monthly_income) {
+                monthly_income.append(kvp("income_source", income_source_name));
+                monthly_income.append(kvp("income_cash", income));
+                monthly_income.append(kvp("is_single_time", false));
+            }));
+        }));
+    }
 
     // Perform update
     accounts_table.update_one(filter.view(), update.view());
@@ -155,9 +154,8 @@ double accounts_db_management::get_account_free_cash(const std::string &account_
 
     // Get balance
     bsoncxx::stdx::optional<bsoncxx::document::value> account =
-            accounts_table.find_one(document{}
-                                            << "account_name" << account_name
-                                            << finalize);
+            accounts_table.find_one(bsoncxx::builder::basic::make_document(kvp("account_name", account_name)));
+
     if (account) {
         bsoncxx::document::element cash_elem = account->view()["free_cash"];
         if (cash_elem.type() != bsoncxx::type::k_double)
@@ -189,6 +187,19 @@ bool accounts_db_management::is_account_exists(const std::string &account_name) 
 
     // Perform check
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result = accounts_table.find_one(
-            document{} << "account_name" << account_name << finalize);
+            bsoncxx::builder::basic::make_document(kvp("account_name", account_name)));
     return (bool) maybe_result;
+}
+
+bool accounts_db_management::is_income_exists(const std::string &account_name, const std::string &income_source_name) const {
+    // DB desired table access
+    mongocxx::collection accounts_table = (*db_ptr)[accounts_table_name];
+
+    document filter;
+    filter.append(kvp("account_name", account_name));
+    filter.append(kvp("monthly_income.income_source", income_source_name));
+
+    // Perform search
+    auto result = accounts_table.find_one(filter.view());
+    return (bool)result;
 }

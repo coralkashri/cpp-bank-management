@@ -17,7 +17,7 @@ public:
     void modify_free_cash(const std::string &account_name, double cash);
 
     /// Will store the income details for the current month
-    void update_account_monthly_income(const std::string &account_name, const std::string &income_source_name, double income);
+    void update_account_monthly_income(const std::string &monthly_income, const std::string &income_source_name, double income);
 
     void pause_account_monthly_income(const std::string &account_name, const std::string &income_source);
 
@@ -39,6 +39,8 @@ public:
 private:
     std::string accounts_table_name;
     mongocxx::database *db_ptr;
+
+    [[nodiscard]] bool is_income_exists(const std::string &account_name, const std::string &income_source_name) const;
 };
 
 #endif //BANKMANAGEMENT_ACCOUNTS_DB_MANAGEMENT_H
