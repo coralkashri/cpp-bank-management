@@ -15,7 +15,9 @@ using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::open_document;
 
-db_management::db_management() : client(mongocxx::uri{}), db(client["bank_management_db"]), plans_management(&db),
+db_management::db_management() : client(mongocxx::uri{}),
+                                db(client["bank_management_db"]),
+                                plans_management(&db),
                                 accounts_management(&db) {
 }
 
@@ -38,8 +40,40 @@ double db_management::get_account_free_cash(const std::string &account_name) con
     return accounts_management.get_account_free_cash(account_name);
 }
 
-void db_management::update_account_monthly_income(const std::string &account_name, const std::string &income_source_name, double income) {
-    accounts_management.update_account_monthly_income(account_name, income_source_name, income);
+
+// Account Transactions Management
+
+void db_management::update_account_monthly_income(const std::string &account_name, const std::string &source_name, double income) {
+    accounts_management.get_transactions_management().update_account_monthly_income(account_name, source_name, income);
+}
+
+void db_management::set_account_single_time_income(const std::string &account_name, const std::string &source_name, double income) {
+    accounts_management.get_transactions_management().set_account_single_time_income(account_name, source_name, income);
+}
+
+void db_management::pause_account_monthly_income(const std::string &account_name, const std::string &source_name) {
+    accounts_management.get_transactions_management().pause_account_monthly_income(account_name, source_name);
+
+}
+
+void db_management::restart_account_monthly_income(const std::string &account_name, const std::string &source_name) {
+    accounts_management.get_transactions_management().restart_account_monthly_income(account_name, source_name);
+}
+
+void db_management::update_account_monthly_outcome(const std::string &account_name, const std::string &target_name, double outcome) {
+    accounts_management.get_transactions_management().update_account_monthly_outcome(account_name, target_name, outcome);
+}
+
+void db_management::set_account_single_time_outcome(const std::string &account_name, const std::string &target_name, double outcome) {
+    accounts_management.get_transactions_management().set_account_single_time_outcome(account_name, target_name, outcome);
+}
+
+void db_management::pause_account_monthly_outcome(const std::string &account_name, const std::string &target_name) {
+
+}
+
+void db_management::restart_account_monthly_outcome(const std::string &account_name, const std::string &target_name) {
+
 }
 
 

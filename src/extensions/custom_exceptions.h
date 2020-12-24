@@ -2,6 +2,7 @@
 #define BANKMANAGEMENT_CUSTOM_EXCEPTIONS_H
 
 #include <iostream>
+#include "../program_flow/structures/transaction.h"
 
 class action_not_found_exception : public std::exception {
     [[nodiscard]] const char* what() const noexcept override {
@@ -73,6 +74,38 @@ class expected_negative_number_exception : public std::exception {
     [[nodiscard]] const char* what() const noexcept override {
         return "Illegal action: expected negative number.";
     }
+};
+
+class transaction_not_found_exception : public std::exception {
+public:
+    transaction_not_found_exception(const transaction_id& id) : t_id(id) {
+        msg = t_id.is_income ? "Income" : "Outcome";
+        msg += " transaction: " + t_id.transaction_name + " not found.";
+    }
+
+    [[nodiscard]] const char* what() const noexcept override {
+        return msg.c_str();
+    }
+
+private:
+    transaction_id t_id;
+    std::string msg;
+};
+
+class transaction_already_exists_exception : public std::exception {
+public:
+    transaction_already_exists_exception(const transaction_id& id) : t_id(id) {
+        msg = t_id.is_income ? "Income" : "Outcome";
+        msg += " transaction: " + t_id.transaction_name + " already exists.";
+    }
+
+    [[nodiscard]] const char* what() const noexcept override {
+        return msg.c_str();
+    }
+
+private:
+    transaction_id t_id;
+    std::string msg;
 };
 
 #endif //BANKMANAGEMENT_CUSTOM_EXCEPTIONS_H
