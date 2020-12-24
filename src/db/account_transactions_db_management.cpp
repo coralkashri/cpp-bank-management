@@ -154,16 +154,6 @@ void account_transactions_db_management::change_account_transaction_state(const 
     accounts_table.update_one(filter.view(), update.view());
 }
 
-bsoncxx::builder::basic::document account_transactions_db_management::build_find_transaction_filter(const std::string &account_name,
-                                                                                                    const transaction_id &t_id) const {
-    // Prepare filter
-    bsoncxx::builder::basic::document filter;
-    filter.append(kvp("account_name", account_name));
-    filter.append(kvp("transactions.transaction_name_id", t_id.transaction_name));
-    filter.append(kvp("transactions.is_income", t_id.is_income));
-    return filter;
-}
-
 void account_transactions_db_management::update_account_transaction(const std::string &account_name,
                                                                     const transaction &transaction_data) {
     // DB desired table access
@@ -215,4 +205,14 @@ void account_transactions_db_management::create_account_transaction(const std::s
 
     // Perform update
     accounts_table.update_one(filter.view(), update.view());
+}
+
+bsoncxx::builder::basic::document account_transactions_db_management::build_find_transaction_filter(const std::string &account_name,
+                                                                                                    const transaction_id &t_id) const {
+    // Prepare filter
+    bsoncxx::builder::basic::document filter;
+    filter.append(kvp("account_name", account_name));
+    filter.append(kvp("transactions.transaction_name_id", t_id.transaction_name));
+    filter.append(kvp("transactions.is_income", t_id.is_income));
+    return filter;
 }

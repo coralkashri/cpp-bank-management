@@ -54,12 +54,12 @@ private:
                                                                             const boost::gregorian::date &month,
                                                                             bool is_income) const;
 
-    [[nodiscard]] bsoncxx::builder::basic::document build_find_transaction_filter(const std::string &account_name,
-                                                                                  const transaction_id &t_id) const;
-
     void update_account_transaction(const std::string &account_name, const transaction &transaction_data);
 
     void create_account_transaction(const std::string &account_name, const transaction &transaction_data);
+
+    [[nodiscard]] bsoncxx::builder::basic::document build_find_transaction_filter(const std::string &account_name,
+                                                                                  const transaction_id &t_id) const;
 };
 
 #endif //BANKMANAGEMENT_ACCOUNT_TRANSACTIONS_DB_MANAGEMENT_H
