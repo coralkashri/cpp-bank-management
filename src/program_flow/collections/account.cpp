@@ -33,8 +33,8 @@ void account::modify_free_cash(double cash) {
     db_ptr->modify_account_free_cash(account_name, cash);
 }
 
-void account::update_monthly_income(const std::string &income_source_name, double income) {
-    db_ptr->update_account_monthly_income(account_name, income_source_name, income);
+void account::transactions_management() {
+    transactions.actions();
 }
 
 std::string account::get_account_name() const {
@@ -68,7 +68,7 @@ void account::print_plan_details(const std::string &plan_name) {
 
 void account::plan_management(const std::string &plan_name) {
     auto plan_it = find_plan(plan_name);
-    plan_it->plan_actions();
+    plan_it->actions();
 }
 
 void account::remove_plan(const std::string &plan_name) {

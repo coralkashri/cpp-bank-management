@@ -1,8 +1,8 @@
 #include "plan_management.h"
-#include "../extensions/std_extensions.h"
-#include "../extensions/my_shell.h"
-#include "../extensions/custom_exceptions.h"
-#include "../extensions/custom_validations.h"
+#include "../../extensions/std_extensions.h"
+#include "../../extensions/my_shell.h"
+#include "../../extensions/custom_exceptions.h"
+#include "../../extensions/custom_validations.h"
 
 plan_management::plan_management(db_management *db_ptr, const std::string &account_name, const std::string &plan_name,
                                  output_logger_manager *output)

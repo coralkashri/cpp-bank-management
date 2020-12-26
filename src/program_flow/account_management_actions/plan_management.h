@@ -2,9 +2,9 @@
 #define BANKMANAGEMENT_PLAN_MANAGEMENT_H
 
 
-#include "../db/db_management.h"
-#include "../structures/output_logger_manager.h"
-#include "../external_tools/multimap/multimap.h"
+#include "../../db/db_management.h"
+#include "../../structures/output_logger_manager.h"
+#include "../../external_tools/multimap/multimap.h"
 
 class plan_management {
 public:

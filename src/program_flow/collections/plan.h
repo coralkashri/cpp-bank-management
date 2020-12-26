@@ -5,7 +5,7 @@
 #include <filesystem>
 #include "../../db/db_management.h"
 #include "../../structures/output_logger_manager.h"
-#include "../plan_management.h"
+#include "../account_management_actions/plan_management.h"
 
 class plan {
 public:
@@ -17,7 +17,7 @@ public:
     [[nodiscard]] std::string get_plan_name() const;
     [[nodiscard]] double get_plan_cash() const;
     void print_details() const;
-    void plan_actions();
+    void actions();
 
     bool operator==(const std::string &name) const;
     bool operator!=(const std::string &name) const;

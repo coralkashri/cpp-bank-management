@@ -41,7 +41,7 @@ void plan::print_details() const {
     management.print_details();
 }
 
-void plan::plan_actions() {
+void plan::actions() {
     management.choose_option();
 }
 

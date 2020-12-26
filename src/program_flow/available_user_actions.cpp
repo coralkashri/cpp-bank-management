@@ -92,7 +92,7 @@ void available_user_actions::update_account_monthly_income() {
     my_shell::input("income amount", income);
     if (!custom_validations::is_positive(income))
         throw expected_positive_number_exception();
-    current_account->update_monthly_income(income_source_name, income);
+    current_account->transactions_management();
 }
 
 void available_user_actions::remove_plan() {

@@ -7,6 +7,7 @@
 #include "plan.h"
 #include "../../db/db_management.h"
 #include "../../structures/output_logger_manager.h"
+#include "../account_management_actions/account_transactions_management.h"
 
 class account {
 public:
@@ -16,7 +17,7 @@ public:
     bool delete_account();
 
     void modify_free_cash(double cash);
-    void update_monthly_income(const std::string& income_source_name, double income);
+    void transactions_management();
     void print_account_details() const;
     [[nodiscard]] std::string get_account_name() const;
     [[nodiscard]] std::vector<std::string> get_plan_names() const;
@@ -29,13 +30,15 @@ public:
     bool operator!=(const std::string &name) const;
 
 private:
+    std::string account_name;
+    db_management *db_ptr;
+    output_logger_manager *output;
+
+    account_transactions_management transactions;
+
     template<typename T>
     using plans_container = std::vector<T>;
     plans_container<plan> plans;
-    std::string account_name;
-    db_management *db_ptr;
-    //double available_cash; // TODO Add cash management
-    output_logger_manager *output;
 
     plans_container<plan>::iterator find_plan(const std::string &name);
 };
