@@ -16,7 +16,7 @@ public:
     void remove_account();
     void increase_free_cash();
     void decrease_free_cash();
-    void update_account_monthly_income();
+    void account_transactions_management();
     void get_available_plans();
     void get_available_plans_details();
     void plan_management();

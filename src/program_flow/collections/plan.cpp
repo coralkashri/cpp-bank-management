@@ -42,7 +42,7 @@ void plan::print_details() const {
 }
 
 void plan::actions() {
-    management.choose_option();
+    management.actions();
 }
 
 double plan::delete_plan() {

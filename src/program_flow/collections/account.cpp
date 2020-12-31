@@ -3,7 +3,7 @@
 #include "../../extensions/custom_exceptions.h"
 
 account::account(db_management *db_ptr, const std::string &account_name, output_logger_manager *output)
-: db_ptr(db_ptr), account_name(account_name), output(output) {
+: db_ptr(db_ptr), account_name(account_name), output(output), transactions(db_ptr, account_name, output) {
     try {
         // Create account in db
         db_ptr->create_account(account_name);

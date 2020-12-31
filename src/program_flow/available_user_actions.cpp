@@ -84,14 +84,8 @@ void available_user_actions::decrease_free_cash() {
     current_account->modify_free_cash(-cash);
 }
 
-void available_user_actions::update_account_monthly_income() {
+void available_user_actions::account_transactions_management() {
     account_login_validation();
-    double income;
-    std::string income_source_name;
-    my_shell::input("income source name", income_source_name);
-    my_shell::input("income amount", income);
-    if (!custom_validations::is_positive(income))
-        throw expected_positive_number_exception();
     current_account->transactions_management();
 }
 

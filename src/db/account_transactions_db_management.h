@@ -6,6 +6,7 @@
 #include <boost/date_time.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/client.hpp>
+#include <bsoncxx/builder/stream/array.hpp>
 #include "../program_flow/structures/transaction.h"
 
 class accounts_db_management;
@@ -60,6 +61,8 @@ private:
 
     [[nodiscard]] bsoncxx::builder::basic::document build_find_transaction_filter(const std::string &account_name,
                                                                                   const transaction_id &t_id) const;
+
+    [[nodiscard]] bsoncxx::v_noabi::array::value build_transaction_update_array_filter(const transaction_id &t_id) const;
 };
 
 #endif //BANKMANAGEMENT_ACCOUNT_TRANSACTIONS_DB_MANAGEMENT_H

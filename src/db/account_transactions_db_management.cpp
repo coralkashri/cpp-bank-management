@@ -174,8 +174,14 @@ void account_transactions_db_management::update_account_transaction(const std::s
         $set.append(kvp("transactions.$.is_active", transaction_data.is_active));
     }));
 
+    // Update options
+    auto update_options = mongocxx::options::update();
+    /*auto array_filter = build_transaction_update_array_filter(transaction_data.id);
+    update_options.array_filters(array_filter.view());
+    std::cout << bsoncxx::to_json(update_options.array_filters()->view()) << std::endl;*/
+
     // Perform update
-    accounts_table.update_one(filter.view(), update.view());
+    accounts_table.update_one(filter.view(), update.view(), update_options);
 }
 
 void account_transactions_db_management::create_account_transaction(const std::string &account_name,
@@ -212,7 +218,44 @@ bsoncxx::builder::basic::document account_transactions_db_management::build_find
     // Prepare filter
     bsoncxx::builder::basic::document filter;
     filter.append(kvp("account_name", account_name));
-    filter.append(kvp("transactions.transaction_name_id", t_id.transaction_name));
-    filter.append(kvp("transactions.is_income", t_id.is_income));
+    /*filter.append(kvp("transactions.transaction_name_id", t_id.transaction_name));
+    filter.append(kvp("transactions.is_income", t_id.is_income));*/
+
+    filter.append(kvp("transactions", [t_id](sub_document transactions) {
+        transactions.append(kvp("$elemMatch", [&](sub_document $elem_match) {
+            $elem_match.append(kvp("transaction_name_id", [&](sub_document transaction_name_id) {
+                transaction_name_id.append(kvp("$eq", t_id.transaction_name));
+            }));
+            $elem_match.append(kvp("is_income", [&](sub_document is_income) {
+                is_income.append(kvp("$eq", t_id.is_income));
+            }));
+        }));
+    }));
+
     return filter;
+}
+
+bsoncxx::v_noabi::array::value account_transactions_db_management::build_transaction_update_array_filter(const transaction_id &t_id) const {
+    using bsoncxx::builder::stream::open_array;
+    using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::open_document;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::finalize;
+
+    auto arr = bsoncxx::builder::stream::array()
+            << open_document
+                << "$and" << open_array
+                    << open_document
+                        << "transactions.transaction_name_id" << open_document
+                            << "$eq" << t_id.transaction_name
+                        << close_document
+                    << close_document << open_document
+                        << "transactions.is_income" << open_document
+                            << "$eq" << t_id.is_income
+                        << close_document
+                    << close_document
+                << close_array
+            << close_document << finalize;
+
+    return arr;
 }

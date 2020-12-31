@@ -22,7 +22,7 @@ program_action::program_action() : user_actions(&output) {
             {{{"create_plan",             "cp",   ""}, "Create new plan and associate it to this account."}, &available_user_actions::create_plan},
             {{{"remove_plan",             "rp",   ""}, "Remove plan from this account."},                    &available_user_actions::remove_plan},
             {{{"plan_management",         "pm",   ""}, "Manage selected plan in this account."},             &available_user_actions::plan_management},
-            {{{"transactions_management", "tm",   ""}, "Update a monthly income to this account."},          &available_user_actions::update_account_monthly_income}
+            {{{"transactions_management", "tm",   ""}, "Update a monthly income to this account."},          &available_user_actions::account_transactions_management}
     };
     is_running_flag = true;
     exit_keyword = "exit";
