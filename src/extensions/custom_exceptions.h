@@ -108,4 +108,10 @@ private:
     std::string msg;
 };
 
+class illegal_date_exception : public std::exception {
+    [[nodiscard]] const char* what() const noexcept override {
+        return "Specified date is illegal.";
+    }
+};
+
 #endif //BANKMANAGEMENT_CUSTOM_EXCEPTIONS_H

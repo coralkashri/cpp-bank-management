@@ -77,11 +77,23 @@ void account_transactions_management::restart_monthly_outcome() const {
 }
 
 void account_transactions_management::get_outcome_details() const {
-
+    /*int year, month;
+    my_shell::input("target year", year);
+    my_shell::input("target month", month);*/
+    std::vector<transaction> desired_transactions = db_ptr->get_account_outcome_details(account_name, boost::gregorian::date(boost::gregorian::greg_year_month_day{2021, 2, 1}));
+    for (auto &t : desired_transactions) {
+        std::cout << t << std::endl;
+    }
 }
 
 void account_transactions_management::get_income_details() const {
-
+    /*int year, month;
+    my_shell::input("target year", year);
+    my_shell::input("target month", month);*/
+    std::vector<transaction> desired_transactions = db_ptr->get_account_income_details(account_name, boost::gregorian::date(boost::gregorian::greg_year_month_day{2021, 2, 1}));
+    for (auto &t : desired_transactions) {
+        std::cout << t << std::endl;
+    }
 }
 
 void account_transactions_management::print_details() const {

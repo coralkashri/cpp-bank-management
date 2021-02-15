@@ -15,4 +15,7 @@ struct transaction {
     bool is_active;
 };
 
+std::ostream& operator<<(std::ostream& out, const transaction_id &t_id);
+std::ostream& operator<<(std::ostream& out, const transaction &t);
+
 #endif //BANKMANAGEMENT_TRANSACTION_H

@@ -69,11 +69,11 @@ void db_management::set_account_single_time_outcome(const std::string &account_n
 }
 
 void db_management::pause_account_monthly_outcome(const std::string &account_name, const std::string &target_name) {
-
+    accounts_management.get_transactions_management().pause_account_monthly_outcome(account_name, target_name);
 }
 
 void db_management::restart_account_monthly_outcome(const std::string &account_name, const std::string &target_name) {
-
+    accounts_management.get_transactions_management().restart_account_monthly_outcome(account_name, target_name);
 }
 
 
@@ -110,4 +110,14 @@ std::vector<std::string> db_management::get_all_account_plans(const std::string 
 
 bool db_management::is_account_exists(const std::string &account_name) const {
     return accounts_management.is_account_exists(account_name);
+}
+
+std::vector<transaction>
+db_management::get_account_outcome_details(const std::string &account_name, const boost::gregorian::date &month) const {
+    return accounts_management.get_transactions_management().get_account_outcome_details(account_name, month);
+}
+
+std::vector<transaction>
+db_management::get_account_income_details(const std::string &account_name, const boost::gregorian::date &month) const {
+    return accounts_management.get_transactions_management().get_account_income_details(account_name, month);
 }

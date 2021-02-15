@@ -25,13 +25,15 @@
           "transaction_name_id": "string", // Key
           "is_income": true, // Key
           "cash": 0.0,
-          "is_single_time": false
+          "is_single_time": false,
+          "is_active": true
         },
         {
           "transaction_name_id": "string", // Key
           "is_income": false, // Key
           "cash": 0.0,
-          "is_single_time": false
+          "is_single_time": false,
+          "is_active": false
         }
       ]
     }

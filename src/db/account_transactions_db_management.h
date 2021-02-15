@@ -8,6 +8,8 @@
 #include <mongocxx/client.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include "../program_flow/structures/transaction.h"
+#include "filters/db_account_transactions_filter.h"
+#include "filters/db_filter.h"
 
 class accounts_db_management;
 
@@ -41,9 +43,14 @@ public:
     [[nodiscard]] std::vector<transaction> get_account_income_details(const std::string &account_name,
                                                                       const boost::gregorian::date &month) const;
 
+    [[nodiscard]] static std::string get_date_for_db(const boost::gregorian::date &date);
+
 private:
     mongocxx::database *db_ptr;
     accounts_db_management *accounts_db_m;
+    std::string transactions_db_field_name;
+    db_filter expanded_filter;
+    db_account_transactions_filter transactions_filter;
 
     [[nodiscard]] bool is_transaction_exists(const std::string &account_name, const transaction_id &id) const;
 
@@ -58,9 +65,6 @@ private:
     void update_account_transaction(const std::string &account_name, const transaction &transaction_data);
 
     void create_account_transaction(const std::string &account_name, const transaction &transaction_data);
-
-    [[nodiscard]] bsoncxx::builder::basic::document build_find_transaction_filter(const std::string &account_name,
-                                                                                  const transaction_id &t_id) const;
 };
 
 #endif //BANKMANAGEMENT_ACCOUNT_TRANSACTIONS_DB_MANAGEMENT_H
