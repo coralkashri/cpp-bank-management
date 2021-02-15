@@ -190,14 +190,19 @@ std::vector<transaction> account_transactions_db_management::get_account_transac
 
     // Get transactions from archive
     mongocxx::pipeline filter{};
-    document is_income_aggregate_filter;
-    transactions_filter.apply<db_account_transactions_filter::AGR_IS_INCOME>(is_income_aggregate_filter, transactions_field_hierarchy, is_income);
-    filter.match(bsoncxx::builder::basic::make_document(kvp("account_name", account_name)));
-    filter.project(is_income_aggregate_filter.view());
-    if (is_archive) {
+    if (is_archive) { // Desired archive filter
         document archive_aggregate_filter;
         transactions_filter.apply<db_account_transactions_filter::AGR_ARCHIVE_BY_DATE>(archive_aggregate_filter, "", month);
         filter.project(archive_aggregate_filter.view());
+    }
+    {
+        // Income / Outcome filter
+        document is_income_aggregate_filter;
+        transactions_filter.apply<db_account_transactions_filter::AGR_IS_INCOME>(is_income_aggregate_filter,
+                                                                                 transactions_field_hierarchy,
+                                                                                 is_income);
+        filter.match(bsoncxx::builder::basic::make_document(kvp("account_name", account_name)));
+        filter.project(is_income_aggregate_filter.view());
     }
     auto accounts = accounts_table.aggregate(filter, mongocxx::options::aggregate{});
     for (auto account : accounts) {
