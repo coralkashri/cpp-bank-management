@@ -26,58 +26,34 @@ void db_account_transactions_filter::filter_by_id(document &filter, const std::s
     }));
 }
 
-void db_account_transactions_filter::filter_by_is_income(document &filter, const std::string &transactions_hierarchy, bool is_income) const {
-    filter.append(kvp(transactions_hierarchy + transactions_db_field_name, [&is_income](sub_document transactions) {
-        transactions.append(kvp("$elemMatch", [&](sub_document $elem_match) {
-            $elem_match.append(kvp("is_income", [&](sub_document transaction_name_id) {
-                transaction_name_id.append(kvp("$eq", is_income));
-            }));
-        }));
-    }));
+void db_account_transactions_filter::filter_by_is_income(document &filter, const std::string &transactions_hierarchy,
+                                                         bool is_income) const {
+    make_regular_filter(filter,
+                        transactions_hierarchy + transactions_db_field_name,
+                        "is_income", is_income);
 }
 
 void db_account_transactions_filter::filter_archive_by_date(document &filter, const std::string &archive_hierarchy,
                                                             const boost::gregorian::date &date) const {
-    filter.append(kvp(archive_hierarchy + "archive", [&date, this](sub_document transactions) {
-        transactions.append(kvp("$elemMatch", [&](sub_document $elem_match) {
-            $elem_match.append(kvp("month", [&](sub_document transaction_name_id) {
-                transaction_name_id.append(kvp("$eq", account_transactions_db_management::get_date_for_db(date)));
-            }));
-        }));
-    }));
+    std::string archive_field_name = "archive";
+    make_regular_filter(filter,
+                        archive_hierarchy + archive_field_name,
+                        "month", account_transactions_db_management::get_date_for_db(date));
 }
 
 void db_account_transactions_filter::aggregate_filter_by_is_income(document &filter,
                                                                    const std::string &transactions_hierarchy,
                                                                    bool is_income) const {
-    filter.append(kvp(transactions_hierarchy + transactions_db_field_name, [&](sub_document transactions) {
-        transactions.append(kvp("$filter", [&](sub_document $filter) {
-            $filter.append(kvp("input", "$" + transactions_hierarchy + transactions_db_field_name));
-            std::string transaction_it_name = "transct";
-            $filter.append(kvp("as", transaction_it_name));
-            $filter.append(kvp("cond", [&](sub_document cond) {
-                cond.append(kvp("$eq", [&](sub_array $eq) {
-                    $eq.append("$$" + transaction_it_name + ".is_income", is_income);
-                }));
-            }));
-        }));
-    }));
+    make_aggregate_filter(filter,
+                          transactions_hierarchy + transactions_db_field_name,
+                          "is_income", is_income);
 }
 
 void
 db_account_transactions_filter::aggregate_filter_archive_by_date(document &filter, const std::string &archive_hierarchy,
                                                                  const boost::gregorian::date &date) const {
     std::string archive_field_name = "archive";
-    filter.append(kvp(archive_hierarchy + archive_field_name, [&](sub_document transactions) {
-        transactions.append(kvp("$filter", [&](sub_document $filter) {
-            $filter.append(kvp("input", "$" + archive_hierarchy + archive_field_name));
-            std::string transaction_it_name = "transct";
-            $filter.append(kvp("as", transaction_it_name));
-            $filter.append(kvp("cond", [&](sub_document cond) {
-                cond.append(kvp("$eq", [&](sub_array $eq) {
-                    $eq.append("$$" + transaction_it_name + ".month", account_transactions_db_management::get_date_for_db(date));
-                }));
-            }));
-        }));
-    }));
+    make_aggregate_filter(filter,
+                          archive_hierarchy + archive_field_name,
+                          "month", account_transactions_db_management::get_date_for_db(date));
 }
