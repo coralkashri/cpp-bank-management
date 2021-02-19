@@ -2,6 +2,7 @@
 #define BANKMANAGEMENT_DB_FILTER_H
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <map>
 #include <variant>
 
 class db_filter {
@@ -21,6 +22,13 @@ public:
         return *this;
     }
 
+    struct filter_field {
+        using optional_variable_types = std::variant<std::string, int, bool, float, double>;
+
+        std::string field_hierarchy;
+        std::map<std::string, optional_variable_types> sub_fields;
+    };
+
     /**
      *
      * @tparam Args
@@ -29,27 +37,7 @@ public:
      * @param fields .first  -> Field name
      *               .second -> Field param
      */
-    template <typename ...Args>
-    static void make_regular_filter(bsoncxx::builder::basic::document &filter, const std::string &array_hierarchy,
-                                    std::pair<std::string, Args>&& ...fields) {
-        using bsoncxx::builder::basic::kvp;
-        using bsoncxx::builder::basic::sub_document;
-        using optional_variable_types = std::variant<std::string, int, bool, float, double>;
-
-        std::vector<std::pair<std::string, optional_variable_types>> fields_arr = {fields...};
-
-        filter.append(kvp(array_hierarchy, [&fields_arr](sub_document transactions) {
-            transactions.append(kvp("$elemMatch", [&](sub_document $elem_match) {
-                for (auto &field : fields_arr) {
-                    $elem_match.append(kvp(field.first, [&](sub_document transaction_name_id) {
-                        std::visit([&](auto &&arg) {
-                            transaction_name_id.append(kvp("$eq", arg));
-                        }, field.second);
-                    }));
-                }
-            }));
-        }));
-    }
+    static void make_regular_filter_on_arrays(bsoncxx::builder::basic::document &filter, const std::vector<filter_field> &fields);
 
     template <typename ValueT>
     static void make_aggregate_filter(bsoncxx::builder::basic::document &filter, const std::string &array_hierarchy,
