@@ -9,7 +9,7 @@
 #include <bsoncxx/builder/stream/array.hpp>
 #include "../program_flow/structures/transaction.h"
 #include "filters/db_account_transactions_filter.h"
-#include "filters/db_filter.h"
+#include "filters/tools/db_filter.h"
 
 class accounts_db_management;
 

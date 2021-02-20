@@ -39,6 +39,7 @@ public:
 
 private:
     std::string transactions_db_field_name;
+    std::string archive_field_name;
 
     void filter_by_id(bsoncxx::builder::basic::document &filter, const std::string &transactions_hierarchy,
                       const transaction_id &t_id) const;

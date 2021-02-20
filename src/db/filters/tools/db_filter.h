@@ -4,6 +4,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <map>
 #include <variant>
+#include "filter_field.h"
 
 class db_filter {
 public:
@@ -22,22 +23,15 @@ public:
         return *this;
     }
 
-    struct filter_field {
-        using optional_variable_types = std::variant<std::string, int, bool, float, double>;
-
-        std::string field_hierarchy;
-        std::map<std::string, optional_variable_types> sub_fields;
-    };
-
     /**
      *
      * @tparam Args
-     * @param filter
+     * @param array_document
      * @param array_hierarchy
      * @param fields .first  -> Field name
      *               .second -> Field param
      */
-    static void make_regular_filter_on_arrays(bsoncxx::builder::basic::document &filter, const std::vector<filter_field> &fields);
+    static void make_regular_filter_on_arrays(bsoncxx::builder::basic::document &array_document, const std::vector<filter_field> &fields);
 
     template <typename ValueT>
     static void make_aggregate_filter(bsoncxx::builder::basic::document &filter, const std::string &array_hierarchy,
@@ -46,8 +40,8 @@ public:
         using bsoncxx::builder::basic::sub_document;
         using bsoncxx::builder::basic::sub_array;
 
-        filter.append(kvp(array_hierarchy, [&](sub_document transactions) {
-            transactions.append(kvp("$filter", [&](sub_document $filter) {
+        filter.append(kvp(array_hierarchy, [&](sub_document array_document) {
+            array_document.append(kvp("$filter", [&](sub_document $filter) {
                 $filter.append(kvp("input", "$" + array_hierarchy));
                 std::string it_name = "it";
                 $filter.append(kvp("as", it_name));
