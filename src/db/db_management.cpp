@@ -7,6 +7,8 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include "../extensions/custom_exceptions.h"
+#include "../extensions/boost_gregorian_extensions.h"
+#include "../program_flow/structures/transactions.h"
 
 using bsoncxx::builder::stream::close_array;
 using bsoncxx::builder::stream::close_document;
@@ -48,7 +50,17 @@ void db_management::update_account_monthly_income(const std::string &account_nam
 }
 
 void db_management::set_account_single_time_income(const std::string &account_name, const std::string &source_name, double income) {
+    double previous_income = 0;
+    try {
+        auto current_t = transactions(get_account_income_details(account_name, boost::gregorian::current_local_date()))
+                .at({
+                            .transaction_name = source_name,
+                            .is_income = true
+                    });
+        previous_income = current_t.cash;
+    } catch (...) {}
     accounts_management.get_transactions_management().set_account_single_time_income(account_name, source_name, income);
+    modify_account_free_cash(account_name, income - previous_income);
 }
 
 void db_management::pause_account_monthly_income(const std::string &account_name, const std::string &source_name) {
@@ -65,7 +77,17 @@ void db_management::update_account_monthly_outcome(const std::string &account_na
 }
 
 void db_management::set_account_single_time_outcome(const std::string &account_name, const std::string &target_name, double outcome) {
+    double previous_outcome = 0;
+    try {
+        auto current_t = transactions(get_account_outcome_details(account_name, boost::gregorian::current_local_date()))
+                .at({
+                            .transaction_name = target_name,
+                            .is_income = false
+                    });
+        previous_outcome = current_t.cash;
+    } catch (...) {}
     accounts_management.get_transactions_management().set_account_single_time_outcome(account_name, target_name, outcome);
+    modify_account_free_cash(account_name, previous_outcome - outcome);
 }
 
 void db_management::pause_account_monthly_outcome(const std::string &account_name, const std::string &target_name) {

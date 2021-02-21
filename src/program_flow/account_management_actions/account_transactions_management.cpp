@@ -2,6 +2,8 @@
 #include "../../extensions/my_shell.h"
 #include "../../extensions/std_extensions.h"
 #include "../../extensions/custom_exceptions.h"
+#include "../structures/transactions.h"
+#include "../../extensions/boost_gregorian_extensions.h"
 
 account_transactions_management::account_transactions_management(db_management *db_ptr, const std::string &account_name,
                                                                  output_logger_manager *output)
@@ -77,28 +79,31 @@ void account_transactions_management::restart_monthly_outcome() const {
 }
 
 void account_transactions_management::get_outcome_details() const {
-    /*int year, month;
+    /*TODO int year, month;
     my_shell::input("target year", year);
     my_shell::input("target month", month);*/
-    std::vector<transaction> desired_transactions = db_ptr->get_account_outcome_details(account_name, boost::gregorian::date(boost::gregorian::greg_year_month_day{2021, 2, 1}));
+    std::vector<transaction> desired_transactions = db_ptr->get_account_outcome_details(account_name, boost::gregorian::current_local_date());
     for (auto &t : desired_transactions) {
         std::cout << t << std::endl;
     }
 }
 
 void account_transactions_management::get_income_details() const {
-    /*int year, month;
+    /*TODO int year, month;
     my_shell::input("target year", year);
     my_shell::input("target month", month);*/
-    std::vector<transaction> desired_transactions = db_ptr->get_account_income_details(account_name, boost::gregorian::date(boost::gregorian::greg_year_month_day{2021, 2, 1}));
+    std::vector<transaction> desired_transactions = db_ptr->get_account_income_details(account_name, boost::gregorian::current_local_date());
     for (auto &t : desired_transactions) {
         std::cout << t << std::endl;
     }
 }
 
 void account_transactions_management::print_details() const {
+    auto income = transactions(db_ptr->get_account_income_details(account_name, boost::gregorian::current_local_date()));
+    auto outcome = transactions(db_ptr->get_account_outcome_details(account_name, boost::gregorian::current_local_date()));
     output->printer() << "====================================\n";
-    output->printer() << "Total Income: " << 0.0 << "\n";
-    output->printer() << "Total Outcome: " << 0.0 << "\n";
+    output->printer() << "Total Income:  " << income.sum() << "\n";
+    output->printer() << "Total Outcome: " << outcome.sum() << "\n";
+    output->printer() << "Total Profit:  " << income.sum() - outcome.sum() << "\n";
     output->printer() << "====================================\n";
 }

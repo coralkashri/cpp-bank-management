@@ -39,6 +39,7 @@ namespace my_utils {
         template<class T>
         std::size_t hash_combine(hash_tag, std::size_t seed, T const& t) {
             seed ^= hash(t) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            return seed;
         }
         template<class Container>
         std::size_t fash_hash_random_container(hash_tag, Container const& c ) {
