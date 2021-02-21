@@ -24,19 +24,27 @@ void shadow_updates::monthly_cash_updater(shadow_updates &ref) {
         auto single_time_incomes = account_incomes.get_transactions_by(transactions::IS_SINGLE_TIME, true);
         auto single_time_outcomes = account_outcomes.get_transactions_by(transactions::IS_SINGLE_TIME, true);
         // TODO
-
+        //  - Remove from current transactions
+        //  - Move to archive transactions
 
         // Continues Transactions Handler
         auto continues_time_incomes = account_incomes.get_transactions_by(transactions::IS_SINGLE_TIME, false);
         auto continues_time_outcomes = account_outcomes.get_transactions_by(transactions::IS_SINGLE_TIME, false);
+        // TODO
+        //  - Update account free cash (for every month since the last updated month)
+        //  - Add to archive transactions (for every month since the last updated month)
 
         // Active Transactions Handler
         auto active_incomes = account_incomes.get_transactions_by(transactions::IS_ACTIVE, true);
         auto active_outcomes = account_outcomes.get_transactions_by(transactions::IS_ACTIVE, true);
+        // TODO
+        //  Nothing
 
         // Inactive Transactions Handler
         auto inactive_incomes = account_incomes.get_transactions_by(transactions::IS_ACTIVE, false);
         auto inactive_outcomes = account_outcomes.get_transactions_by(transactions::IS_ACTIVE, false);
+        // TODO
+        //  - Remove from current transactions
     }
 }
 
